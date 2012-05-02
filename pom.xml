@@ -1,9 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>isoviewer</artifactId>
     <packaging>jar</packaging>
     <name>ISO Viewer</name>
-    <version>2.0-RC-4-SNAPSHOT</version>
+    <version>2.0-RC-3-SNAPSHOT</version>
     <description>The ISO Viewer is a UI Tool for viewing ISO Box files (see ISO/IEC 14496-12). Useful for looking into
         Apple Quicktime Movies, DCF files, PDCF files, MP4 files and other ISO Box files.
     </description>
@@ -12,7 +13,7 @@
     <parent>
         <groupId>com.googlecode.mp4parser</groupId>
         <artifactId>tools</artifactId>
-        <version>1.0-RC-4-SNAPSHOT</version>
+        <version>1.0-RC-3-SNAPSHOT</version>
     </parent>
 
     <distributionManagement>
@@ -147,7 +148,7 @@
         <dependency>
             <groupId>com.googlecode.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.0-RC-4-SNAPSHOT</version>
+            <version>1.0-RC-3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
