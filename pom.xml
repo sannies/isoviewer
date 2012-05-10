@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.googlecode.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.0-RC-6-SNAPSHOT</version>
+            <version>1.0-RC-7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
