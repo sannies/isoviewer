@@ -3,7 +3,7 @@
     <artifactId>isoviewer</artifactId>
     <packaging>jar</packaging>
     <name>ISO Viewer</name>
-    <version>2.0-RC-7</version>
+    <version>2.0-RC-8-SNAPSHOT</version>
     <description>The ISO Viewer is a UI Tool for viewing ISO Box files (see ISO/IEC 14496-12). Useful for looking into
         Apple Quicktime Movies, DCF files, PDCF files, MP4 files and other ISO Box files.
     </description>
@@ -12,7 +12,7 @@
     <parent>
         <groupId>com.googlecode.mp4parser</groupId>
         <artifactId>tools</artifactId>
-        <version>1.0-RC-7</version>
+        <version>1.0-RC-8-SNAPSHOT</version>
     </parent>
 
     <distributionManagement>
@@ -147,7 +147,7 @@
         <dependency>
             <groupId>com.googlecode.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.0-RC-7</version>
+            <version>1.0-RC-8-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
@@ -163,8 +163,8 @@
     </dependencies>
 
     <scm>
-        <url>http://code.google.com/p/mp4parser/source/browse/tags/mp4parser-project-1.0-RC-7/source/browse</url>
-        <connection>scm:svn:https://mp4parser.googlecode.com/svn/tags/mp4parser-project-1.0-RC-7/trunk/isoviewer</connection>
+        <url>http://code.google.com/p/mp4parser/source/browse/</url>
+        <connection>scm:svn:https://mp4parser.googlecode.com/svn/trunk/isoviewer</connection>
     </scm>
 
 </project>
