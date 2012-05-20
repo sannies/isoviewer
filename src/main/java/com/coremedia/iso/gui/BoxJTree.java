@@ -34,11 +34,11 @@ public class BoxJTree extends JTree implements PropertySupport {
         java.util.List<String> openPath = new LinkedList<String>();
         Path oldMp4Path = null;
         if (treePathEnumeration != null) {
-            oldMp4Path = new Path((IsoFile) this.getModel().getRoot());
+
 
             while (treePathEnumeration.hasMoreElements()) {
                 TreePath treePath = treePathEnumeration.nextElement();
-                openPath.add(oldMp4Path.createPath((Box) treePath.getLastPathComponent()));
+                openPath.add(Path.createPath((Box) treePath.getLastPathComponent()));
             }
         }
         return openPath;
@@ -47,11 +47,11 @@ public class BoxJTree extends JTree implements PropertySupport {
 
     public void setSessionState(Component c, Object state) {
         LinkedList<String> openPath = (LinkedList<String>) state;
-        Path nuMp4Path = new Path((IsoFile) this.getModel().getRoot());
+
         if (!openPath.isEmpty()) {
 
             for (String s : openPath) {
-                Box expanded = nuMp4Path.getPath(s);
+                Box expanded = Path.getPath((Box) this.getModel().getRoot(), s);
                 List path = new LinkedList();
                 while (expanded != null) {
                     path.add(expanded);

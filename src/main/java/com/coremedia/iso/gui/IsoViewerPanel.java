@@ -229,10 +229,8 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         Logger.getAnonymousLogger().removeHandler(myTemperaryLogHandler);
         System.err.println("Parsing took " + ((System.nanoTime() - start) / 1000000d) + "ms.");
 
-        Path oldMp4Path = new Path((IsoFile) tree.getModel().getRoot());
         tree.setModel(new IsoFileTreeModel(isoFile));
         tree.revalidate();
-        Path nuMp4Path = new Path(isoFile);
 
 
         trackList.setModel(new TrackListModel(isoFile));
@@ -247,9 +245,9 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
                     JOptionPane.WARNING_MESSAGE);
 
         }
-        if (details instanceof Box && oldMp4Path != null) {
-            String path = oldMp4Path.createPath((Box) details);
-            Box nuDetail = nuMp4Path.getPath(path);
+        if (details instanceof Box) {
+            String path = Path.createPath((Box) details);
+            Box nuDetail = Path.getPath(isoFile, path);
             if (nuDetail != null) {
                 showDetails(nuDetail);
             } else {
