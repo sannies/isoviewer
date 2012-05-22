@@ -244,12 +244,12 @@ public class GenericBoxPane extends JPanel {
                             });
                             jScrollPane.getViewport().add(jl);
                             jScrollPane.setPreferredSize(new Dimension(400, 200));
-                            add(name, jScrollPane);
+                            add(name + "[" + length + "]", jScrollPane);
                         } else {
 
                             if (length < 50) {
 
-                                StringBuffer valueBuffer = new StringBuffer();
+                                StringBuilder valueBuffer = new StringBuilder();
                                 valueBuffer.append("[");
 
 
@@ -270,7 +270,7 @@ public class GenericBoxPane extends JPanel {
                                     valueBuffer.append(", ...");
                                 }
                                 valueBuffer.append("]");
-                                add(name, new NonEditableJTextField(valueBuffer.toString()));
+                                add(name + "[" + length + "]", new NonEditableJTextField(valueBuffer.toString()));
                             } else {
 
                                 JScrollPane jScrollPane = new JScrollPane();
