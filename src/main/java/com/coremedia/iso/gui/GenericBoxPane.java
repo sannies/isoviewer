@@ -23,6 +23,7 @@ import com.coremedia.iso.boxes.UnknownBox;
 import com.coremedia.iso.gui.transferhelper.StringTransferValue;
 import com.coremedia.iso.gui.transferhelper.TransferHelperFactory;
 import com.coremedia.iso.gui.transferhelper.TransferValue;
+import com.googlecode.mp4parser.util.Path;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -143,6 +144,7 @@ public class GenericBoxPane extends JPanel {
         this.add(displayName);
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.gridy++;
+        add("path", new NonEditableJTextField(Path.createPath(box)));
         add("type", new NonEditableJTextField(box.getType()));
 
 
