@@ -28,7 +28,7 @@ public class SampleListModel extends AbstractListModel {
 
     public Object getElementAt(int index) {
         ByteBuffer bb  = list.get(index);
-        long offset = list.getOffsetKeys().get(index);
+        long offset = list.getOffsetKeys()[index];
         return new Entry(bb, offset, trackId, se);
     }
 
