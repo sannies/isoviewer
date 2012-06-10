@@ -43,7 +43,6 @@ public class IsoSampleNALUnitReader {
         this.nalLengthSize = nalLengthSize;
     }
 
-
     public ByteBuffer nextNALUnit() throws IOException {
         if (src.remaining() < 5) {
             return null;

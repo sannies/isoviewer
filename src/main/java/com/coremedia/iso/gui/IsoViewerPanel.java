@@ -20,8 +20,11 @@ import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.SampleDescriptionBox;
 import com.coremedia.iso.boxes.TrackBox;
+import com.coremedia.iso.boxes.fragment.TrackFragmentBox;
+import com.coremedia.iso.boxes.h264.AvcConfigurationBox;
 import com.coremedia.iso.boxes.mdat.SampleList;
 import com.coremedia.iso.gui.hex.JHexEditor;
+import com.googlecode.mp4parser.boxes.basemediaformat.AvcNalUnitStorageBox;
 import com.googlecode.mp4parser.util.ByteBufferByteChannel;
 import com.googlecode.mp4parser.util.Path;
 import org.jdesktop.application.Action;
@@ -145,9 +148,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
                         }
                     }
                 } else if (index == 1) {
-                    if (trackList.getSelectedValue() != null) {
-                        showSamples((TrackBox) trackList.getSelectedValue());
-                    }
+                    showSamples(trackList.getSelectedValue());
                 }
             }
         });
@@ -157,7 +158,8 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         trackList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         trackList.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                showSamples((TrackBox) ((JList) e.getSource()).getSelectedValue());
+                final Object selectedValue = ((JList) e.getSource()).getSelectedValue();
+                showSamples(selectedValue);
             }
         });
 
@@ -173,21 +175,39 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
 
     }
 
-    private void showSamples(TrackBox tb) {
+    private void showSamples(Object selectedValue) {
+        if (selectedValue != null && selectedValue instanceof TrackBox) {
+            final TrackBox trackBox = (TrackBox) selectedValue;
+            SampleDescriptionBox sampleDescriptionBox = trackBox.getMediaBox().getMediaInformationBox().getSampleTableBox().getSampleDescriptionBox();
+            showSamples(new SampleListModel(new SampleList(trackBox),
+                    trackBox.getTrackHeaderBox().getTrackId(), sampleDescriptionBox.getSampleEntry(), null));
+        } else if (selectedValue != null && selectedValue instanceof TrackFragmentBox) {
+            final TrackFragmentBox trackFragmentBox = (TrackFragmentBox) selectedValue;
+            final List<AvcNalUnitStorageBox> avcNalUnitStorageBoxes = trackFragmentBox.getBoxes(AvcNalUnitStorageBox.class);
+            AvcConfigurationBox.AVCDecoderConfigurationRecord avcDecoderConfigurationRecord
+                    = avcNalUnitStorageBoxes != null && avcNalUnitStorageBoxes.size() > 0 ?
+                    avcNalUnitStorageBoxes.get(0).getAvcDecoderConfigurationRecord() : null;
+            showSamples(new SampleListModel(new SampleList(trackFragmentBox),
+                    trackFragmentBox.getTrackFragmentHeaderBox().getTrackId(), null, avcDecoderConfigurationRecord));
+        }
+    }
+
+    private void showSamples(SampleListModel sampleListModel) {
         detailPanel.removeAll();
         JComponent detailPane = new JPanel(new BorderLayout());
 
         JList jlist = new JList();
         jlist.setCellRenderer(new SampleListRenderer());
 
-        SampleDescriptionBox sampleDescriptionBox = tb.getMediaBox().getMediaInformationBox().getSampleTableBox().getSampleDescriptionBox();
-        jlist.setModel(new SampleListModel(new SampleList(tb), tb.getTrackHeaderBox().getTrackId(), sampleDescriptionBox.getSampleEntry()));
+        //SampleDescriptionBox sampleDescriptionBox = tb.getMediaBox().getMediaInformationBox().getSampleTableBox().getSampleDescriptionBox();
+        //jlist.setModel(new SampleListModel(new SampleList(tb), tb.getTrackHeaderBox().getTrackId(), sampleDescriptionBox.getSampleEntry()));
+        jlist.setModel(sampleListModel);
         jlist.setLayoutOrientation(JList.VERTICAL);
         jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jlist.setPrototypeCellValue(new SampleListModel.Entry(ByteBuffer.allocate(1000), 1000000000, 0, null));
+        jlist.setPrototypeCellValue(new SampleListModel.Entry(ByteBuffer.allocate(1000), 1000000000, 0, null, null));
         JScrollPane jScrollPane = new JScrollPane();
         jScrollPane.getViewport().add(jlist);
-        detailPane.add(new JLabel(String.format(trackViewDetailPaneHeader, tb.getTrackHeaderBox().getTrackId())), BorderLayout.PAGE_START);
+        detailPane.add(new JLabel(String.format(trackViewDetailPaneHeader, sampleListModel.getTrackId())), BorderLayout.PAGE_START);
         detailPane.add(jScrollPane, BorderLayout.CENTER);
         jlist.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {

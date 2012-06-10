@@ -1,6 +1,7 @@
 package com.coremedia.iso.gui;
 
 import com.coremedia.iso.boxes.TrackBox;
+import com.coremedia.iso.boxes.fragment.TrackFragmentBox;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,8 +15,15 @@ public class TrackListRenderer extends DefaultListCellRenderer {
                                                   int index,
                                                   boolean isSelected,
                                                   boolean cellHasFocus) {
-        TrackBox trackBox = ((TrackBox) value);
-        value = "Track " + trackBox.getTrackHeaderBox().getTrackId();
+        final long trackId;
+        if (value instanceof TrackBox) {
+            TrackBox trackBox = ((TrackBox) value);
+            trackId = trackBox.getTrackHeaderBox().getTrackId();
+        } else {
+            TrackFragmentBox traf = ((TrackFragmentBox) value);
+            trackId = traf.getTrackFragmentHeaderBox().getTrackId();
+        }
+        value = "Track " + trackId;
         super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
         return this;
     }
