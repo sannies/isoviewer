@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>isoviewer</artifactId>
     <packaging>jar</packaging>
@@ -43,16 +44,37 @@
 
         <plugins>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <configuration>
+                    <tasks>
+                        <rename src="${project.build.outputDirectory}/isoviewer.jnlp"
+                                dest="${project.build.outputDirectory}/isoviewer-${project.version}.jnlp"/>
+                    </tasks>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <phase>install</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>com.googlecode.maven-gcu-plugin</groupId>
                 <artifactId>maven-gcu-plugin</artifactId>
-                <version>1.2-CL</version>
+                <version>1.1</version>
                 <configuration>
                     <serverId>mp4parser-svn</serverId>
                     <failsOnError>true</failsOnError>
                     <projectName>mp4parser</projectName>
                     <uploads>
                         <upload>
-                            <file>${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}</file>
+                            <file>
+                                ${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}
+                            </file>
                             <summary>${project.name} ${project.version} executable jar</summary>
                             <labels>
                                 <label>Featured</label>
@@ -60,8 +82,7 @@
                             </labels>
                         </upload>
                         <upload>
-                            <file>${project.build.outputDirectory}/isoviewer.jnlp</file>
-                            <name>isoviewer-${project.version}.jnlp</name>
+                            <file>${project.build.outputDirectory}/isoviewer-${project.version}.jnlp</file>
                             <summary>${project.name} ${project.version} JNLP Webstart File</summary>
                             <labels>
                                 <label>Featured</label>
