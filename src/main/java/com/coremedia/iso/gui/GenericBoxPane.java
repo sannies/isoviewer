@@ -295,7 +295,7 @@ public class GenericBoxPane extends JPanel {
                                     }
                                 });
                                 jScrollPane.getViewport().add(jl);
-                                add(name, jScrollPane);
+                                add(name + "[" + length + "]", jScrollPane);
                             }
                         }
                     } else if (List.class.isAssignableFrom(value.getClass())) {
@@ -319,7 +319,7 @@ public class GenericBoxPane extends JPanel {
                             }
                         });
                         jScrollPane.getViewport().add(jl);
-                        add(name + " (" + finalLength + " entries)", jScrollPane);
+                        add(name + "[" + finalLength + "]", jScrollPane);
 
                     }
 
