@@ -16,6 +16,7 @@
 
 package com.coremedia.iso.gui;
 
+import com.coremedia.iso.Hex;
 import com.googlecode.mp4parser.AbstractBox;
 import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.FullBox;
@@ -23,6 +24,7 @@ import com.coremedia.iso.boxes.UnknownBox;
 import com.coremedia.iso.gui.transferhelper.StringTransferValue;
 import com.coremedia.iso.gui.transferhelper.TransferHelperFactory;
 import com.coremedia.iso.gui.transferhelper.TransferValue;
+import com.googlecode.mp4parser.boxes.piff.UuidBasedProtectionSystemSpecificHeaderBox;
 import com.googlecode.mp4parser.util.Path;
 
 import javax.swing.JButton;
@@ -60,6 +62,8 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Detailed view of a Box.
@@ -69,6 +73,7 @@ public class GenericBoxPane extends JPanel {
     GridBagLayout gridBagLayout;
     GridBagConstraints gridBagConstraints;
     static Properties names = new Properties();
+    Pattern p = Pattern.compile("(.*)\\((.*?)\\)");
 
     static {
         try {
@@ -129,16 +134,12 @@ public class GenericBoxPane extends JPanel {
 
     protected void addHeader() {
         JLabel displayName = new JLabel();
-        if (box instanceof UnknownBox) {
-            displayName.setText("Unknown Box - " + box.getType());
-        } else {
-            displayName.setText(names.getProperty(box.getType(), box.getType()));
-        }
-
+        displayName.setText(FourCcToName.name(box.getType(), box instanceof AbstractBox?((AbstractBox) box).getUserType():null, box.getParent()!=null?box.getParent().getType():null));
         Font curFont = displayName.getFont();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
+        gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
         displayName.setFont(new Font(curFont.getFontName(), curFont.getStyle(), 20));
         gridBagLayout.setConstraints(displayName, gridBagConstraints);
         this.add(displayName);
@@ -363,5 +364,33 @@ public class GenericBoxPane extends JPanel {
         }
     }
 
+    private static class FourCcToName {
 
+
+        public static String name(String type, byte[] userType, String parent) {
+            String name;
+            if (userType != null) {
+                if (!"uuid".equals((type))) {
+                    throw new RuntimeException("we have a userType but no uuid box type. Something's wrong");
+                }
+                name = names.getProperty((parent) + "-uuid[" + Hex.encodeHex(userType).toUpperCase() + "]");
+                if (name == null) {
+                    name = names.getProperty("uuid[" + Hex.encodeHex(userType).toUpperCase() + "]");
+                }
+                if (name == null) {
+                    name = names.getProperty("uuid");
+                }
+            } else {
+                name = names.getProperty((parent) + "-" + (type));
+                if (name == null) {
+                    name = names.getProperty((type));
+                }
+            }
+            if (name == null) {
+                name = names.getProperty("default");
+            }
+            return name;
+
+        }
+    }
 }
