@@ -48,7 +48,7 @@
                 <version>1.7</version>
                 <configuration>
                     <tasks>
-                        <rename src="${project.build.outputDirectory}/isoviewer.jnlp" dest="${project.build.outputDirectory}/isoviewer-${project.version}.jnlp" />
+                        <move file="${project.build.outputDirectory}/isoviewer.jnlp" tofile="${project.build.outputDirectory}/isoviewer-${project.version}.jnlp" />
                     </tasks>
                 </configuration>
                 <executions>
