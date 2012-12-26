@@ -17,36 +17,19 @@
 package com.coremedia.iso.gui;
 
 import com.coremedia.iso.Hex;
-import com.googlecode.mp4parser.AbstractBox;
 import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.FullBox;
-import com.coremedia.iso.boxes.UnknownBox;
 import com.coremedia.iso.gui.transferhelper.StringTransferValue;
 import com.coremedia.iso.gui.transferhelper.TransferHelperFactory;
 import com.coremedia.iso.gui.transferhelper.TransferValue;
-import com.googlecode.mp4parser.boxes.piff.UuidBasedProtectionSystemSpecificHeaderBox;
+import com.googlecode.mp4parser.AbstractBox;
 import com.googlecode.mp4parser.util.Path;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataListener;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.BeanInfo;
@@ -57,12 +40,8 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
+import java.util.*;
 import java.util.List;
-import java.util.Properties;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -134,7 +113,7 @@ public class GenericBoxPane extends JPanel {
 
     protected void addHeader() {
         JLabel displayName = new JLabel();
-        displayName.setText(FourCcToName.name(box.getType(), box instanceof AbstractBox?((AbstractBox) box).getUserType():null, box.getParent()!=null?box.getParent().getType():null));
+        displayName.setText(FourCcToName.name(box.getType(), box instanceof AbstractBox ? ((AbstractBox) box).getUserType() : null, box.getParent() != null ? box.getParent().getType() : null));
         Font curFont = displayName.getFont();
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.gridx = 0;
@@ -381,9 +360,9 @@ public class GenericBoxPane extends JPanel {
                     name = names.getProperty("uuid");
                 }
             } else {
-                name = names.getProperty((parent) + "-" + (type));
+                name = names.getProperty(parent + "-" + type);
                 if (name == null) {
-                    name = names.getProperty((type));
+                    name = names.getProperty(type);
                 }
             }
             if (name == null) {

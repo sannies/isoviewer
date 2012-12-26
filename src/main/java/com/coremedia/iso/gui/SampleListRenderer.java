@@ -28,7 +28,7 @@ public class SampleListRenderer extends DefaultListCellRenderer {
         value = "Sample " + (index + 1) + "@" + sampleListEntry.offset + " - " + sampleListEntry.sample.limit() + "bytes";
         final SampleEntry se = sampleListEntry.se;
         if (se != null && se instanceof VisualSampleEntry &&
-                ("avc1".equals(se.getType()) || "mp4v".equals(se.getType()) || ("encv".equals(se.getType()) && ((VisualSampleEntry) se).getCompressorname().contains("AVC")))) {
+                !se.getBoxes(AvcConfigurationBox.class).isEmpty()) {
             try {
                 final int nalLengthSize = se.getBoxes(AvcConfigurationBox.class).get(0).getLengthSizeMinusOne() + 1;
                 ArrayList<NalWrapper> nals = getNals(sampleListEntry, nalLengthSize);
