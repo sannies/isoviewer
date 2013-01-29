@@ -5,6 +5,7 @@ import com.coremedia.iso.boxes.sampleentry.SampleEntry;
 import com.coremedia.iso.boxes.sampleentry.VisualSampleEntry;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
