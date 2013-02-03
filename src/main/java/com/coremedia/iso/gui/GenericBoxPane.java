@@ -361,8 +361,10 @@ public class GenericBoxPane extends JPanel {
                 }
             } else {
                 name = names.getProperty(parent + "-" + type);
-                if (name == null) {
+                if (name == null && type != null) {
                     name = names.getProperty(type);
+                } else if (type == null) {
+                    System.err.println("Type null! Parent: " + parent);
                 }
             }
             if (name == null) {
