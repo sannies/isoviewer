@@ -212,7 +212,8 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         jlist.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    rawDataSplitPane.setBottomComponent(new JHexEditor(((SampleListModel.Entry) ((JList) e.getSource()).getSelectedValue()).sample));
+                    final ByteBuffer sample = ((SampleListModel.Entry) ((JList) e.getSource()).getSelectedValue()).sample;
+                    rawDataSplitPane.setBottomComponent(new JHexEditor(sample.slice()));
 
                 }
             }
