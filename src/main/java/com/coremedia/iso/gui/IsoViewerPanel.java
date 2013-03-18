@@ -31,35 +31,10 @@ import org.jdesktop.application.Action;
 import org.jdesktop.application.Resource;
 import org.jdesktop.application.session.PropertySupport;
 
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
-import javax.swing.JTree;
-import javax.swing.ListSelectionModel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Cursor;
-import java.awt.Frame;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintStream;
-import java.io.RandomAccessFile;
+import javax.swing.*;
+import javax.swing.event.*;
+import java.awt.*;
+import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.LinkedList;
@@ -105,6 +80,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         IsoFile dummy = new IsoFile();
         tree = new BoxJTree();
         tree.setModel(new IsoFileTreeModel(dummy));
+        tree.setLargeModel(true);
 
         tree.addTreeSelectionListener(new TreeSelectionListener() {
             public void valueChanged(TreeSelectionEvent e) {
@@ -249,7 +225,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
 
         Logger.getAnonymousLogger().removeHandler(myTemperaryLogHandler);
         System.err.println("Parsing took " + ((System.nanoTime() - start) / 1000000d) + "ms.");
-
+        tree.setLargeModel(true);
         tree.setModel(new IsoFileTreeModel(isoFile));
         tree.revalidate();
 
@@ -326,7 +302,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
                 }
             } else if (object instanceof IsoFile) {
                 FileChannel fc = new FileInputStream(this.file).getChannel();
-                displayMe = fc.map(FileChannel.MapMode.READ_ONLY, 0, Math.min(this.file.length(), Integer.MAX_VALUE));
+                displayMe = fc.map(FileChannel.MapMode.READ_ONLY, 0, Math.min(this.file.length(), 1024 * 1024));
                 fc.close();
             } else {
                 displayMe = ByteBuffer.allocate(0);
