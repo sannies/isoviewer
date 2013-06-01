@@ -1,11 +1,12 @@
 package com.coremedia.iso.gui;
 
 import com.coremedia.iso.boxes.h264.AvcConfigurationBox;
-import com.coremedia.iso.boxes.sampleentry.SampleEntry;
+import com.coremedia.iso.boxes.sampleentry.AbstractSampleEntry;
 import com.coremedia.iso.boxes.sampleentry.VisualSampleEntry;
 
-import javax.swing.*;
-import java.awt.*;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.JList;
+import java.awt.Component;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
@@ -25,8 +26,8 @@ public class SampleListRenderer extends DefaultListCellRenderer {
                                                   boolean cellHasFocus) {
         SampleListModel.Entry sampleListEntry = (SampleListModel.Entry) value;
 
-        value = "Sample " + (index + 1) + "@" + sampleListEntry.offset + " - " + sampleListEntry.sample.remaining() + "bytes";
-        final SampleEntry se = sampleListEntry.se;
+        value = "Sample " + (index + 1) + "@" + sampleListEntry + " - " + sampleListEntry.sample.remaining() + "bytes";
+        final AbstractSampleEntry se = sampleListEntry.se;
         if (se != null && se instanceof VisualSampleEntry &&
                 !se.getBoxes(AvcConfigurationBox.class).isEmpty()) {
             try {

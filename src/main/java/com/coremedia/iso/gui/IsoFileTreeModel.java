@@ -18,7 +18,7 @@ package com.coremedia.iso.gui;
 
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Box;
-import com.coremedia.iso.boxes.ContainerBox;
+import com.coremedia.iso.boxes.Container;
 
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
@@ -32,9 +32,9 @@ import java.util.List;
  * @see TreeModel
  */
 public class IsoFileTreeModel implements TreeModel {
-    private IsoFile file;
+    private Container file;
 
-    public IsoFileTreeModel(IsoFile file) {
+    public IsoFileTreeModel(Container file) {
         this.file = file;
     }
 
@@ -44,8 +44,8 @@ public class IsoFileTreeModel implements TreeModel {
 
     public int getChildCount(Object parent) {
         if (parent != null) {
-            if (parent instanceof ContainerBox) {
-                ContainerBox container = (ContainerBox) parent;
+            if (parent instanceof Container) {
+                Container container = (Container) parent;
                 return container.getBoxes() == null ? 0 : container.getBoxes().size();
             }
         }
@@ -54,7 +54,7 @@ public class IsoFileTreeModel implements TreeModel {
 
 
     public boolean isLeaf(Object node) {
-        return !(node instanceof ContainerBox);
+        return !(node instanceof Container);
     }
 
     public void addTreeModelListener(TreeModelListener l) {
@@ -64,8 +64,8 @@ public class IsoFileTreeModel implements TreeModel {
     }
 
     public Object getChild(Object parent, int index) {
-        if (parent instanceof ContainerBox) {
-            ContainerBox container = (ContainerBox) parent;
+        if (parent instanceof Container) {
+            Container container = (Container) parent;
             return container.getBoxes().get(index);
 
         }
@@ -74,8 +74,8 @@ public class IsoFileTreeModel implements TreeModel {
 
     public int getIndexOfChild(Object parent, Object child) {
 
-        if (parent instanceof ContainerBox) {
-            ContainerBox container = (ContainerBox) parent;
+        if (parent instanceof Container) {
+            Container container = (Container) parent;
             List<Box> boxes = container.getBoxes();
             for (int i = 0; i < boxes.size(); i++) {
                 if (boxes.get(i).equals(child)) {

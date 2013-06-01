@@ -1,6 +1,5 @@
 package com.coremedia.iso.gui;
 
-import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Box;
 import com.googlecode.mp4parser.util.Path;
 import org.jdesktop.application.session.PropertySupport;
@@ -51,11 +50,11 @@ public class BoxJTree extends JTree implements PropertySupport {
         if (!openPath.isEmpty()) {
 
             for (String s : openPath) {
-                Box expanded = Path.getPath((Box) this.getModel().getRoot(), s);
+                Object expanded = Path.getPath((Box) this.getModel().getRoot(), s);
                 List path = new LinkedList();
-                while (expanded != null) {
+                while (expanded instanceof Box) {
                     path.add(expanded);
-                    expanded = expanded.getParent();
+                    expanded = ((Box) expanded).getParent();
                 }
                 if (path.size() > 0) {
                     Collections.reverse(path);

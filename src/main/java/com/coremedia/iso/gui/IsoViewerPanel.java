@@ -18,23 +18,47 @@ package com.coremedia.iso.gui;
 
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.boxes.Box;
+import com.coremedia.iso.boxes.Container;
 import com.coremedia.iso.boxes.SampleDescriptionBox;
 import com.coremedia.iso.boxes.TrackBox;
-import com.coremedia.iso.boxes.fragment.TrackFragmentBox;
-import com.coremedia.iso.boxes.h264.AvcConfigurationBox;
 import com.coremedia.iso.boxes.mdat.SampleList;
 import com.coremedia.iso.gui.hex.JHexEditor;
-import com.googlecode.mp4parser.boxes.basemediaformat.AvcNalUnitStorageBox;
+import com.googlecode.mp4parser.BasicContainer;
 import com.googlecode.mp4parser.util.ByteBufferByteChannel;
 import com.googlecode.mp4parser.util.Path;
 import org.jdesktop.application.Action;
 import org.jdesktop.application.Resource;
 import org.jdesktop.application.session.PropertySupport;
 
-import javax.swing.*;
-import javax.swing.event.*;
-import java.awt.*;
-import java.io.*;
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JTree;
+import javax.swing.ListSelectionModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
+import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Frame;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.LinkedList;
@@ -77,7 +101,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
 
 
     public void createLayout() {
-        IsoFile dummy = new IsoFile();
+        Container dummy = new BasicContainer();
         tree = new BoxJTree();
         tree.setModel(new IsoFileTreeModel(dummy));
         tree.setLargeModel(true);
@@ -157,14 +181,6 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
             SampleDescriptionBox sampleDescriptionBox = trackBox.getMediaBox().getMediaInformationBox().getSampleTableBox().getSampleDescriptionBox();
             showSamples(new SampleListModel(new SampleList(trackBox),
                     trackBox.getTrackHeaderBox().getTrackId(), sampleDescriptionBox.getSampleEntry(), null));
-        } else if (selectedValue != null && selectedValue instanceof TrackFragmentBox) {
-            final TrackFragmentBox trackFragmentBox = (TrackFragmentBox) selectedValue;
-            final List<AvcNalUnitStorageBox> avcNalUnitStorageBoxes = trackFragmentBox.getBoxes(AvcNalUnitStorageBox.class);
-            AvcConfigurationBox.AVCDecoderConfigurationRecord avcDecoderConfigurationRecord
-                    = avcNalUnitStorageBoxes != null && avcNalUnitStorageBoxes.size() > 0 ?
-                    avcNalUnitStorageBoxes.get(0).getAvcDecoderConfigurationRecord() : null;
-            showSamples(new SampleListModel(new SampleList(trackFragmentBox),
-                    trackFragmentBox.getTrackFragmentHeaderBox().getTrackId(), null, avcDecoderConfigurationRecord));
         }
     }
 
@@ -180,7 +196,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         jlist.setModel(sampleListModel);
         jlist.setLayoutOrientation(JList.VERTICAL);
         jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jlist.setPrototypeCellValue(new SampleListModel.Entry(ByteBuffer.allocate(1000), 1000000000, 0, null, null));
+        jlist.setPrototypeCellValue(new SampleListModel.Entry(ByteBuffer.allocate(1000), 0, null, null));
         JScrollPane jScrollPane = new JScrollPane();
         jScrollPane.getViewport().add(jlist);
         detailPane.add(new JLabel(String.format(trackViewDetailPaneHeader, sampleListModel.getTrackId())), BorderLayout.PAGE_START);
