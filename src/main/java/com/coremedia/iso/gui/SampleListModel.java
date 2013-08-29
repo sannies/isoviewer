@@ -33,7 +33,7 @@ public class SampleListModel extends AbstractListModel {
     }
 
     public Object getElementAt(int index) {
-        ByteBuffer bb = list.get(index);
+        ByteBuffer bb = list.get(index).asByteBuffer();
         return new Entry(bb, trackId, se, avcD);
     }
 
