@@ -24,6 +24,8 @@ import com.coremedia.iso.boxes.TrackBox;
 import com.coremedia.iso.boxes.mdat.SampleList;
 import com.coremedia.iso.gui.hex.JHexEditor;
 import com.googlecode.mp4parser.BasicContainer;
+import com.googlecode.mp4parser.DataSource;
+import com.googlecode.mp4parser.FileDataSourceImpl;
 import com.googlecode.mp4parser.util.ByteBufferByteChannel;
 import com.googlecode.mp4parser.util.Path;
 import org.jdesktop.application.Action;
@@ -219,7 +221,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
 
     public void open(File f) throws IOException {
         this.file = f;
-        IsoFile isoFile = new IsoFile(new RandomAccessFile(f, "r").getChannel());
+        IsoFile isoFile = new IsoFile(new FileDataSourceImpl(f));
         long start = System.nanoTime();
         final List<LogRecord> messages = new LinkedList<LogRecord>();
         Handler myTemperaryLogHandler = new Handler() {
