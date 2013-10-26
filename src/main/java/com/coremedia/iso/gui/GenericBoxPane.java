@@ -19,6 +19,7 @@ package com.coremedia.iso.gui;
 import com.coremedia.iso.Hex;
 import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.FullBox;
+import com.coremedia.iso.gui.transferhelper.DateTransferValue;
 import com.coremedia.iso.gui.transferhelper.StringTransferValue;
 import com.coremedia.iso.gui.transferhelper.TransferHelperFactory;
 import com.coremedia.iso.gui.transferhelper.TransferValue;
@@ -55,11 +56,8 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Properties;
+import java.text.SimpleDateFormat;
+import java.util.*;
 import java.util.regex.Pattern;
 
 /**
@@ -215,6 +213,16 @@ public class GenericBoxPane extends JPanel {
                             JCheckBox jCheckBox = new JCheckBox(value.toString(), null, (Boolean) value);
                             add(name, jCheckBox);
                             editable = false;
+                        } else {
+                            add(name, new NonEditableJTextField(value.toString()));
+                        }
+                    }else if (value.getClass().equals(Date.class)) {
+                        if (propertyDescriptor.getWriteMethod() != null) {
+                            JTextField jtf = new JTextField(SimpleDateFormat.getDateTimeInstance().format((Date)value));
+                            jtf.getDocument().addDocumentListener(new ActivateOnChange(apply));
+                            editors.add(new DateTransferValue(jtf, box, propertyDescriptor.getWriteMethod()));
+                            add(name, jtf);
+                            editable = true;
                         } else {
                             add(name, new NonEditableJTextField(value.toString()));
                         }
