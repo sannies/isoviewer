@@ -22,6 +22,7 @@ package com.coremedia.iso.gui;
 
 
 import com.coremedia.iso.IsoTypeReader;
+import com.googlecode.mp4parser.authoring.Sample;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -38,8 +39,10 @@ public class IsoSampleNALUnitReader {
     private final ByteBuffer src;
     private int nalLengthSize = 4;
 
-    public IsoSampleNALUnitReader(ByteBuffer src, int nalLengthSize) throws IOException {
-        this.src = src;
+    public IsoSampleNALUnitReader(Sample src, int nalLengthSize) throws IOException {
+        final ByteBuffer buffer = src.asByteBuffer();
+        buffer.rewind();
+        this.src = buffer;
         this.nalLengthSize = nalLengthSize;
     }
 

@@ -26,6 +26,8 @@ import com.coremedia.iso.gui.hex.JHexEditor;
 import com.googlecode.mp4parser.BasicContainer;
 import com.googlecode.mp4parser.DataSource;
 import com.googlecode.mp4parser.FileDataSourceImpl;
+import com.googlecode.mp4parser.authoring.Sample;
+import com.googlecode.mp4parser.authoring.SampleImpl;
 import com.googlecode.mp4parser.util.ByteBufferByteChannel;
 import com.googlecode.mp4parser.util.Path;
 import org.jdesktop.application.Action;
@@ -198,7 +200,7 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         jlist.setModel(sampleListModel);
         jlist.setLayoutOrientation(JList.VERTICAL);
         jlist.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jlist.setPrototypeCellValue(new SampleListModel.Entry(ByteBuffer.allocate(1000), 0, null, null));
+        jlist.setPrototypeCellValue(new SampleListModel.Entry(new SampleImpl(ByteBuffer.allocate(1000)), 0, null, null));
         JScrollPane jScrollPane = new JScrollPane();
         jScrollPane.getViewport().add(jlist);
         detailPane.add(new JLabel(String.format(trackViewDetailPaneHeader, sampleListModel.getTrackId())), BorderLayout.PAGE_START);
@@ -206,9 +208,10 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         jlist.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if (!e.getValueIsAdjusting()) {
-                    final ByteBuffer sample = ((SampleListModel.Entry) ((JList) e.getSource()).getSelectedValue()).sample;
-                    rawDataSplitPane.setBottomComponent(new JHexEditor(sample.slice()));
-
+                    final Sample sample = ((SampleListModel.Entry) ((JList) e.getSource()).getSelectedValue()).sample;
+                    final ByteBuffer buffer = sample.asByteBuffer();
+                    buffer.rewind();
+                    rawDataSplitPane.setBottomComponent(new JHexEditor(buffer.slice()));
                 }
             }
         });
