@@ -26,7 +26,7 @@ public class SampleListRenderer extends DefaultListCellRenderer {
                                                   boolean cellHasFocus) {
         SampleListModel.Entry sampleListEntry = (SampleListModel.Entry) value;
 
-        value = "Sample " + (index + 1) + "@" + sampleListEntry + " - " + sampleListEntry.sample.remaining() + "bytes";
+        value = "Sample " + (index + 1) + "@" + sampleListEntry + " - " + sampleListEntry.sample.getSize() + "bytes";
         final AbstractSampleEntry se = sampleListEntry.se;
         if (se != null && se instanceof VisualSampleEntry &&
                 !se.getBoxes(AvcConfigurationBox.class).isEmpty()) {
