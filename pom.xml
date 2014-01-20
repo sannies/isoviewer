@@ -8,13 +8,6 @@
         Apple Quicktime Movies, DCF files, PDCF files, MP4 files and other ISO Box files.
     </description>
 
-
-    <parent>
-        <groupId>com.googlecode.mp4parser</groupId>
-        <artifactId>tools</artifactId>
-        <version>1.0-RC-31-SNAPSHOT</version>
-    </parent>
-
     <distributionManagement>
         <repository>
             <id>localfs</id>
