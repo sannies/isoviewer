@@ -33,9 +33,16 @@
 
         <plugins>
             <plugin>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <localCheckout>true</localCheckout>
+                    <pushChanges>true</pushChanges>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>com.github.github</groupId>
                 <artifactId>releases-github-plugin</artifactId>
-                <version>0.10-SNAPSHOT</version>
+                <version>0.9-sannies</version>
                 <configuration>
                    <deliverables>
                        <directory>${basedir}</directory>
