@@ -64,7 +64,7 @@
                    <deliverables>
                        <directory>${basedir}</directory>
                        <includes>
-                           <include>pom.xml</include>
+                           <include>target/${project.build.finalName}.jar</include>
                        </includes>
                    </deliverables>
                 </configuration>
