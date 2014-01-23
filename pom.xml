@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>isoviewer</artifactId>
     <groupId>de.sannies.isoviewer</groupId>
     <packaging>jar</packaging>
     <name>ISO Viewer</name>
-    <version>1.0-RC-31-SNAPSHOT</version>
+    <version>1.0-RC-31</version>
     <description>The ISO Viewer is a UI Tool for viewing ISO Box files (see ISO/IEC 14496-12). Useful for looking into
         Apple Quicktime Movies, DCF files, PDCF files, MP4 files and other ISO Box files.
     </description>
@@ -66,8 +65,7 @@
                 <version>1.7</version>
                 <configuration>
                     <tasks>
-                        <move file="${project.build.outputDirectory}/isoviewer.jnlp"
-                              tofile="${project.build.outputDirectory}/isoviewer-${project.version}.jnlp"/>
+                        <move file="${project.build.outputDirectory}/isoviewer.jnlp" tofile="${project.build.outputDirectory}/isoviewer-${project.version}.jnlp" />
                     </tasks>
                 </configuration>
                 <executions>
@@ -163,6 +161,7 @@
     <scm>
         <connection>scm:git:git@github.com:sannies/isoviewer.git</connection>
         <developerConnection>scm:git:git@github.com:sannies/isoviewer.git</developerConnection>
-    </scm>
+      <tag>isoviewer-1.0-RC-31</tag>
+  </scm>
 
 </project>
