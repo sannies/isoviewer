@@ -1,22 +1,19 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>isoviewer</artifactId>
+    <groupId>de.sannies.isoviewer</groupId>
     <packaging>jar</packaging>
     <name>ISO Viewer</name>
     <version>1.0-RC-31-SNAPSHOT</version>
     <description>The ISO Viewer is a UI Tool for viewing ISO Box files (see ISO/IEC 14496-12). Useful for looking into
         Apple Quicktime Movies, DCF files, PDCF files, MP4 files and other ISO Box files.
     </description>
-
-    <distributionManagement>
-        <repository>
-            <id>localfs</id>
-            <url>file://${project.basedir}/target/release</url>
-        </repository>
-    </distributionManagement>
+    <url>https://github.com/sannies/isoviewer</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <github.global.server>github</github.global.server>
     </properties>
 
 
@@ -36,12 +33,34 @@
 
         <plugins>
             <plugin>
+                <groupId>com.github.github</groupId>
+                <artifactId>releases-github-plugin</artifactId>
+                <version>0.10-SNAPSHOT</version>
+                <configuration>
+                   <deliverables>
+                       <directory>${basedir}</directory>
+                       <includes>
+                           <include>pom.xml</include>
+                       </includes>
+                   </deliverables>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>create-release</goal>
+                        </goals>
+                        <phase>site</phase>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>1.7</version>
                 <configuration>
                     <tasks>
-                        <move file="${project.build.outputDirectory}/isoviewer.jnlp" tofile="${project.build.outputDirectory}/isoviewer-${project.version}.jnlp" />
+                        <move file="${project.build.outputDirectory}/isoviewer.jnlp"
+                              tofile="${project.build.outputDirectory}/isoviewer-${project.version}.jnlp"/>
                     </tasks>
                 </configuration>
                 <executions>
@@ -50,44 +69,6 @@
                             <goal>run</goal>
                         </goals>
                         <phase>install</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.googlecode.maven-gcu-plugin</groupId>
-                <artifactId>maven-gcu-plugin</artifactId>
-                <version>1.1</version>
-                <configuration>
-                    <serverId>mp4parser-svn</serverId>
-                    <failsOnError>true</failsOnError>
-                    <projectName>mp4parser</projectName>
-                    <uploads>
-                        <upload>
-                            <file>
-                                ${project.build.directory}/${project.artifactId}-${project.version}.${project.packaging}
-                            </file>
-                            <summary>${project.name} ${project.version} executable jar</summary>
-                            <labels>
-                                <label>Featured</label>
-                                <label>Type-Executable</label>
-                            </labels>
-                        </upload>
-                        <upload>
-                            <file>${project.build.outputDirectory}/isoviewer-${project.version}.jnlp</file>
-                            <summary>${project.name} ${project.version} JNLP Webstart File</summary>
-                            <labels>
-                                <label>Featured</label>
-                                <label>Type-Executable</label>
-                            </labels>
-                        </upload>
-                    </uploads>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>upload</goal>
-                        </goals>
-                        <phase>deploy</phase>
                     </execution>
                 </executions>
             </plugin>
@@ -173,8 +154,8 @@
     </dependencies>
 
     <scm>
-        <url>http://code.google.com/p/mp4parser/source/browse/</url>
-        <connection>scm:svn:https://mp4parser.googlecode.com/svn/trunk/isoviewer</connection>
+        <connection>scm:git:git@github.com:sannies/isoviewer.git</connection>
+        <developerConnection>scm:git:git@github.com:sannies/isoviewer.git</developerConnection>
     </scm>
 
 </project>
