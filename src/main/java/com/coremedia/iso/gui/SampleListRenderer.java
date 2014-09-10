@@ -1,8 +1,8 @@
 package com.coremedia.iso.gui;
 
-import com.coremedia.iso.boxes.h264.AvcConfigurationBox;
 import com.coremedia.iso.boxes.sampleentry.AbstractSampleEntry;
 import com.coremedia.iso.boxes.sampleentry.VisualSampleEntry;
+import com.mp4parser.iso14496.part15.AvcConfigurationBox;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
