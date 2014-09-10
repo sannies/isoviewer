@@ -26,26 +26,11 @@ import com.coremedia.iso.gui.transferhelper.TransferValue;
 import com.googlecode.mp4parser.AbstractBox;
 import com.googlecode.mp4parser.util.Path;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.ListModel;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListDataListener;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.BeanInfo;
@@ -58,6 +43,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -86,12 +72,9 @@ public class GenericBoxPane extends JPanel {
             "deadBytes",
             "type",
             "userType",
-            "size",
             "displayName",
             "contentSize",
             "header",
-            "version",
-            "flags",
             "isoFile",
             "parent",
             "data",
@@ -100,6 +83,15 @@ public class GenericBoxPane extends JPanel {
             "tracks",
             "sampleSizeAtIndex",
             "numOfBytesToFirstChild");
+
+    private static final Collection<String> genericPropsList = Arrays.asList(
+            "size",
+            "type",
+            "version",
+            "flags",
+            "path",
+            "offset",
+            "parsed");
 
     public GenericBoxPane(Box box) {
         this.box = box;
@@ -140,11 +132,6 @@ public class GenericBoxPane extends JPanel {
         this.add(displayName);
         gridBagConstraints.gridwidth = 1;
         gridBagConstraints.gridy++;
-        add("path", new NonEditableJTextField(Path.createPath(box)));
-        add("type", new NonEditableJTextField(box.getType()));
-
-
-        add("size", new NonEditableJTextField(String.valueOf(box.getSize())));
 
 
         if (box instanceof FullBox) {
@@ -163,181 +150,54 @@ public class GenericBoxPane extends JPanel {
         try {
             BeanInfo beanInfo = Introspector.getBeanInfo(box.getClass());
             PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
-            boolean editable = false;
-            final List<TransferValue> editors = new LinkedList<TransferValue>();
-            JButton apply = new JButton("Apply changes");
-            apply.setEnabled(false);
-            apply.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                    for (TransferValue editor : editors) {
-                        editor.go();
-                    }
-                    Container c = GenericBoxPane.this.getParent();
-                    while (!(c instanceof IsoViewerPanel)) {
-                        c = c.getParent();
-                    }
-                    ((IsoViewerPanel) c).showDetails(box);
+
+
+            List<PropertyDescriptor> genericProps = new ArrayList<PropertyDescriptor>();
+            Collections.sort(genericProps, new Comparator<PropertyDescriptor>() {
+                public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
+                    return o1.getName().compareTo(o2.getName());
                 }
             });
+
+            List<PropertyDescriptor> boxSpecificProps = new ArrayList<PropertyDescriptor>();
+            Collections.sort(boxSpecificProps, new Comparator<PropertyDescriptor>() {
+                public int compare(PropertyDescriptor o1, PropertyDescriptor o2) {
+                    return o1.getName().compareTo(o2.getName());
+                }
+            });
+
+
             for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
                 String name = propertyDescriptor.getName();
+                System.err.println("Checking " + name);
                 if (!skipList.contains(name) &&
                         propertyDescriptor.getReadMethod() != null &&
                         !AbstractBox.class.isAssignableFrom(propertyDescriptor.getReadMethod().getReturnType())) {
-                    final Object value = propertyDescriptor.getReadMethod().invoke(box, (Object[]) null);
-                    if (value == null) {
-                        add(name, new NonEditableJTextField(""));
-                    } else if (Number.class.isAssignableFrom(value.getClass())) {
-                        if (propertyDescriptor.getWriteMethod() != null) {
-                            JFormattedTextField jftf = new JFormattedTextField(NumberFormat.getNumberInstance());
-                            jftf.setValue(value);
-                            jftf.getDocument().addDocumentListener(new ActivateOnChange(apply));
-                            editors.add(TransferHelperFactory.getNumberTransferHelper(value.getClass(), box, propertyDescriptor.getWriteMethod(), jftf));
-                            add(name, jftf);
-                            editable = true;
-                        } else {
-                            add(name, new NonEditableJTextField(value.toString()));
-                        }
-                    } else if (value.getClass().equals(String.class)) {
-                        if (propertyDescriptor.getWriteMethod() != null) {
-                            JTextField jtf = new JTextField(value.toString());
-                            jtf.getDocument().addDocumentListener(new ActivateOnChange(apply));
-                            editors.add(new StringTransferValue(jtf, box, propertyDescriptor.getWriteMethod()));
-                            add(name, jtf);
-                            editable = true;
-                        } else {
-                            add(name, new NonEditableJTextField(value.toString()));
-                        }
-                    } else if (value.getClass().equals(Boolean.class)) {
-                        if (propertyDescriptor.getWriteMethod() != null) {
-                            JCheckBox jCheckBox = new JCheckBox(value.toString(), null, (Boolean) value);
-                            add(name, jCheckBox);
-                            editable = false;
-                        } else {
-                            add(name, new NonEditableJTextField(value.toString()));
-                        }
-                    }else if (value.getClass().equals(Date.class)) {
-                        if (propertyDescriptor.getWriteMethod() != null) {
-                            JTextField jtf = new JTextField(SimpleDateFormat.getDateTimeInstance().format((Date)value));
-                            jtf.getDocument().addDocumentListener(new ActivateOnChange(apply));
-                            editors.add(new DateTransferValue(jtf, box, propertyDescriptor.getWriteMethod()));
-                            add(name, jtf);
-                            editable = true;
-                        } else {
-                            add(name, new NonEditableJTextField(value.toString()));
-                        }
-                    } else if (value.getClass().isArray()) {
-                        int length = Array.getLength(value);
-                        if (value.getClass().getComponentType().isAssignableFrom(String.class)) {
-
-                            JScrollPane jScrollPane = new JScrollPane();
-                            jScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-                            JList jl = new JList();
-                            jl.setCellRenderer(new MultiLineCellRenderer());
-                            final int finalLength = length;
-                            jl.setModel(new ListModel() {
-                                public int getSize() {
-                                    return finalLength;
-                                }
-
-                                public Object getElementAt(int index) {
-                                    return Array.get(value, index);
-                                }
-
-                                public void addListDataListener(ListDataListener l) {
-                                }
-
-                                public void removeListDataListener(ListDataListener l) {
-                                }
-                            });
-                            jScrollPane.getViewport().add(jl);
-                            jScrollPane.setPreferredSize(new Dimension(400, 200));
-                            add(name + "[" + length + "]", jScrollPane);
-                        } else {
-
-                            if (length < 50) {
-
-                                StringBuilder valueBuffer = new StringBuilder();
-                                valueBuffer.append("[");
-
-
-                                boolean trucated = false;
-
-                                if (length > 1000) {
-                                    trucated = true;
-                                    length = 1000;
-                                }
-                                for (int j = 0; j < length; j++) {
-                                    if (j > 0) {
-                                        valueBuffer.append(", ");
-                                    }
-                                    Object item = Array.get(value, j);
-                                    valueBuffer.append(item != null ? item.toString() : "");
-                                }
-                                if (trucated) {
-                                    valueBuffer.append(", ...");
-                                }
-                                valueBuffer.append("]");
-                                add(name + "[" + length + "]", new NonEditableJTextField(valueBuffer.toString()));
-                            } else {
-
-                                JScrollPane jScrollPane = new JScrollPane();
-                                jScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-                                JList jl = new JList();
-                                final int finalLength = length;
-                                jl.setModel(new ListModel() {
-                                    public int getSize() {
-                                        return finalLength;
-                                    }
-
-                                    public Object getElementAt(int index) {
-                                        return Array.get(value, index);
-                                    }
-
-                                    public void addListDataListener(ListDataListener l) {
-                                    }
-
-                                    public void removeListDataListener(ListDataListener l) {
-                                    }
-                                });
-                                jScrollPane.getViewport().add(jl);
-                                add(name + "[" + length + "]", jScrollPane);
-                            }
-                        }
-                    } else if (List.class.isAssignableFrom(value.getClass())) {
-                        JScrollPane jScrollPane = new JScrollPane();
-                        jScrollPane.getVerticalScrollBar().setUnitIncrement(16);
-                        JList jl = new JList();
-                        final int finalLength = ((List) value).size();
-                        jl.setModel(new ListModel() {
-                            public int getSize() {
-                                return finalLength;
-                            }
-
-                            public Object getElementAt(int index) {
-                                return ((List) value).get(index);
-                            }
-
-                            public void addListDataListener(ListDataListener l) {
-                            }
-
-                            public void removeListDataListener(ListDataListener l) {
-                            }
-                        });
-                        jScrollPane.getViewport().add(jl);
-                        add(name + "[" + finalLength + "]", jScrollPane);
-
+                    if (genericPropsList.contains(name)) {
+                        genericProps.add(propertyDescriptor);
+                    } else {
+                        boxSpecificProps.add(propertyDescriptor);
                     }
-
                 }
             }
-            if (editable) {
-                gridBagConstraints.gridx = 1;
-                gridBagConstraints.gridy++;
-                gridBagConstraints.fill = GridBagConstraints.NONE;
-                gridBagConstraints.anchor = GridBagConstraints.EAST;
-                gridBagLayout.setConstraints(apply, gridBagConstraints);
-                add(apply);
+
+
+            for (PropertyDescriptor propertyDescriptor : genericProps) {
+                final Object value = propertyDescriptor.getReadMethod().invoke(box, (Object[]) null);
+                createUiElement(propertyDescriptor.getName(), value);
+            }
+            JSeparator jSeparator = new JSeparator(JSeparator.HORIZONTAL);
+            GridBagConstraints jSepGbc = new GridBagConstraints();
+            jSepGbc.gridy = gridBagConstraints.gridy++;
+            jSepGbc.gridwidth = GridBagConstraints.REMAINDER;
+            Dimension d = jSeparator.getPreferredSize();
+            d.height = 5;
+            jSeparator.setPreferredSize(d);
+            this.add(jSeparator, jSepGbc);
+
+            for (PropertyDescriptor propertyDescriptor : boxSpecificProps) {
+                final Object value = propertyDescriptor.getReadMethod().invoke(box, (Object[]) null);
+                createUiElement(propertyDescriptor.getName(), value);
             }
         } catch (IntrospectionException e) {
             e.printStackTrace();
@@ -349,23 +209,109 @@ public class GenericBoxPane extends JPanel {
 
     }
 
-    class ActivateOnChange implements DocumentListener {
-        JComponent toBeActivated;
+    private void createUiElement(String name, final Object value) {
+        if (value == null) {
+            add(name, new NonEditableJTextField(""));
+        } else if (Number.class.isAssignableFrom(value.getClass())) {
+            add(name, new NonEditableJTextField(value.toString()));
+        } else if (value.getClass().equals(String.class)) {
+            add(name, new NonEditableJTextField(value.toString()));
+        } else if (value.getClass().equals(Boolean.class)) {
+            add(name, new NonEditableJTextField(value.toString()));
+        } else if (value.getClass().equals(Date.class)) {
+            add(name, new NonEditableJTextField(value.toString()));
+        } else if (value.getClass().isArray()) {
+            int length = Array.getLength(value);
+            if (value.getClass().getComponentType().isAssignableFrom(String.class)) {
 
-        ActivateOnChange(JComponent toBeActivated) {
-            this.toBeActivated = toBeActivated;
-        }
+                JScrollPane jScrollPane = new JScrollPane();
+                jScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+                JList<String> jl = new JList<String>();
+                jl.setCellRenderer(new MultiLineCellRenderer());
+                final int finalLength = length;
+                jl.setModel(new AbstractListModel<String>() {
+                    public int getSize() {
+                        return finalLength;
+                    }
 
-        public void insertUpdate(DocumentEvent e) {
-            toBeActivated.setEnabled(true);
-        }
+                    public String getElementAt(int index) {
+                        return (String) Array.get(value, index);
 
-        public void removeUpdate(DocumentEvent e) {
-            toBeActivated.setEnabled(true);
-        }
+                    }
 
-        public void changedUpdate(DocumentEvent e) {
-            toBeActivated.setEnabled(true);
+                });
+                jScrollPane.getViewport().add(jl);
+                jScrollPane.setPreferredSize(new Dimension(400, 200));
+                add(name + "[" + length + "]", jScrollPane);
+            } else {
+
+                if (length < 50) {
+
+                    StringBuilder valueBuffer = new StringBuilder();
+                    valueBuffer.append("[");
+
+
+                    boolean trucated = false;
+
+                    if (length > 1000) {
+                        trucated = true;
+                        length = 1000;
+                    }
+                    for (int j = 0; j < length; j++) {
+                        if (j > 0) {
+                            valueBuffer.append(", ");
+                        }
+                        Object item = Array.get(value, j);
+                        valueBuffer.append(item != null ? item.toString() : "");
+                    }
+                    if (trucated) {
+                        valueBuffer.append(", ...");
+                    }
+                    valueBuffer.append("]");
+                    add(name + "[" + length + "]", new NonEditableJTextField(valueBuffer.toString()));
+                } else {
+
+                    JScrollPane jScrollPane = new JScrollPane();
+                    jScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+                    JList<Object> jl = new JList<Object>();
+                    final int finalLength = length;
+
+                    jl.setModel(new AbstractListModel<Object>() {
+                        public int getSize() {
+                            return finalLength;
+                        }
+
+                        public Object getElementAt(int index) {
+                            return Array.get(value, index);
+                        }
+                    });
+                    jScrollPane.getViewport().add(jl);
+                    add(name + "[" + length + "]", jScrollPane);
+                }
+            }
+        } else if (List.class.isAssignableFrom(value.getClass())) {
+            JScrollPane jScrollPane = new JScrollPane();
+            jScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+            JList jl = new JList();
+            final int finalLength = ((List) value).size();
+            jl.setModel(new ListModel() {
+                public int getSize() {
+                    return finalLength;
+                }
+
+                public Object getElementAt(int index) {
+                    return ((List) value).get(index);
+                }
+
+                public void addListDataListener(ListDataListener l) {
+                }
+
+                public void removeListDataListener(ListDataListener l) {
+                }
+            });
+            jScrollPane.getViewport().add(jl);
+            add(name + "[" + finalLength + "]", jScrollPane);
+
         }
     }
 
