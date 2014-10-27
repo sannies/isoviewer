@@ -84,23 +84,21 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
     private JPanel detailPanel;
     private JSplitPane rawDataSplitPane;
 
+    private String trackViewDetailPaneHeader = "Track %s";
     @Resource
-    private String trackViewDetailPaneHeader = "T %s";
+    private String tabbedPaneHeaderTrack = "Tracks & Samples";
     @Resource
-    private String tabbedPaneHeaderTrack = "T&S";
-    @Resource
-    private String tabbedPaneHeaderBox = "BS";
+    private String tabbedPaneHeaderBox = "Boxes";
 
     private Object details;
 
-    private Frame mainFrame;
+
     private File file;
 
 
-    public IsoViewerPanel(Frame mainFrame) {
-        this.mainFrame = mainFrame;
+    public IsoViewerPanel() {
         this.setName("IsoViewerPanel");
-
+        createLayout();
     }
 
 
@@ -274,7 +272,6 @@ public class IsoViewerPanel extends JPanel implements PropertySupport {
         } else {
             showDetails(isoFile);
         }
-        mainFrame.setTitle("Iso Viewer - " + f.getAbsolutePath());
 
     }
 
