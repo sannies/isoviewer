@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.coremedia.iso.gui.hex;
+package com.github.sannies.isoviewer.hex;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollBar;

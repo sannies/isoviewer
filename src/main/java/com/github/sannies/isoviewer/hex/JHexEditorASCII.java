@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package com.coremedia.iso.gui.hex;
+package com.github.sannies.isoviewer.hex;
 
 
-import com.coremedia.iso.gui.Iso8859_1;
+import com.github.sannies.isoviewer.Iso8859_1;
 
 import javax.swing.JComponent;
 import java.awt.Color;

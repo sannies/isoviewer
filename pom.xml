@@ -77,7 +77,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.googlecode.mp4parser.isoviewer.IsoViewerFx</mainClass>
+                                    <mainClass>com.github.sannies.isoviewer.IsoViewerFx</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
