@@ -121,7 +121,7 @@
         <dependency>
             <groupId>com.googlecode.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.0.4.3-SNAPSHOT</version>
+            <version>1.0.5.3</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
@@ -145,7 +145,7 @@
     <repositories>
         <repository>
             <id>mp4parser-staging</id>
-            <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1025</url>
+            <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1049</url>
         </repository>
     </repositories>
 
