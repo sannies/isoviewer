@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileOpenEventHandler implements EventHandler<ActionEvent> {
+    FileChooser fileChooser = new FileChooser();
     Stage stage;
     IsoViewerFx isoViewerFx;
 
@@ -35,7 +36,7 @@ public class FileOpenEventHandler implements EventHandler<ActionEvent> {
 
 
     public void handle(ActionEvent event) {
-        FileChooser fileChooser = new FileChooser();
+
 
 //Set extension filter
         fileChooser.getExtensionFilters().addAll(
@@ -48,7 +49,7 @@ public class FileOpenEventHandler implements EventHandler<ActionEvent> {
             stage.setTitle(file.getPath());
             try {
                 isoViewerFx.openFile(file);
-                stage.setTitle(file.getAbsolutePath());
+
             } catch (IOException e) {
                 e.printStackTrace();
                 throw new RuntimeException();

@@ -62,25 +62,26 @@ public class IsoViewerFx extends Application {
 
     public void openFile(File f) throws IOException {
         IsoFile isoFile = new IsoFile(f.getAbsolutePath());
+        stage.setTitle(f.getAbsolutePath());
         userPrefs.put("openedFile", f.getAbsolutePath());
         boxesOrTracksTabPane.getTabs().clear();
         boxesOrTracksTabPane.getTabs().add(createBoxAndDetailTab(isoFile));
 
-        List<TrackBox> trackBoxes = isoFile.getMovieBox().getBoxes(TrackBox.class);
+        if (isoFile.getMovieBox() != null) {
+            List<TrackBox> trackBoxes = isoFile.getMovieBox().getBoxes(TrackBox.class);
 
-
-        for (TrackBox trackBox : trackBoxes) {
-            SchemeTypeBox schm = Path.getPath(trackBox, "mdia[0]/minf[0]/stbl[0]/stsd[0]/enc.[0]/sinf[0]/schm[0]");
-            if (schm != null && (schm.getSchemeType().equals("cenc") || schm.getSchemeType().equals("cbc1"))) {
-                boxesOrTracksTabPane.getTabs().add(
-                        createTrackTab(new CencMp4TrackImplImpl(f.getName() + "[" + trackBox.getTrackHeaderBox().getTrackId() + "]", trackBox)));
-            } else {
-                boxesOrTracksTabPane.getTabs().add(
-                        createTrackTab(new Mp4TrackImpl(f.getName() + "[" + trackBox.getTrackHeaderBox().getTrackId() + "]", trackBox)));
+            for (TrackBox trackBox : trackBoxes) {
+                SchemeTypeBox schm = Path.getPath(trackBox, "mdia[0]/minf[0]/stbl[0]/stsd[0]/enc.[0]/sinf[0]/schm[0]");
+                if (schm != null && (schm.getSchemeType().equals("cenc") || schm.getSchemeType().equals("cbc1"))) {
+                    boxesOrTracksTabPane.getTabs().add(
+                            createTrackTab(new CencMp4TrackImplImpl(f.getName() + "[" + trackBox.getTrackHeaderBox().getTrackId() + "]", trackBox)));
+                } else {
+                    boxesOrTracksTabPane.getTabs().add(
+                            createTrackTab(new Mp4TrackImpl(f.getName() + "[" + trackBox.getTrackHeaderBox().getTrackId() + "]", trackBox)));
+                }
             }
+
         }
-
-
     }
 
     @Override
