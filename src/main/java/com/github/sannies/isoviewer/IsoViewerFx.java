@@ -63,7 +63,7 @@ public class IsoViewerFx extends Application {
     public void openFile(File f) throws IOException {
         IsoFile isoFile = new IsoFile(f.getAbsolutePath());
         stage.setTitle(f.getAbsolutePath());
-        userPrefs.put("openedFile", f.getAbsolutePath());
+
         boxesOrTracksTabPane.getTabs().clear();
         boxesOrTracksTabPane.getTabs().add(createBoxAndDetailTab(isoFile));
 
@@ -82,6 +82,7 @@ public class IsoViewerFx extends Application {
             }
 
         }
+        userPrefs.put("openedFile", f.getAbsolutePath());
     }
 
     @Override
@@ -141,7 +142,7 @@ public class IsoViewerFx extends Application {
 
 
         ListView<Sample> left = new ListView<Sample>(FXCollections.observableList(track.getSamples()));
-        final AvcConfigurationBox avcC = Path.getPath(track.getSampleDescriptionBox(), "avc1[0]/avcC[0]");
+        final AvcConfigurationBox avcC = Path.getPath(track.getSampleDescriptionBox(), "avc.[0]/avcC[0]");
         if (avcC == null) {
             left.setCellFactory(new SampleRenderCallback());
         } else {
@@ -214,6 +215,8 @@ public class IsoViewerFx extends Application {
         if (new File(openFile).exists()) {
             try {
                 openFile(new File(openFile));
+            } catch (RuntimeException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -25,9 +25,9 @@ import java.io.File;
 import java.io.IOException;
 
 public class FileOpenEventHandler implements EventHandler<ActionEvent> {
-    FileChooser fileChooser = new FileChooser();
     Stage stage;
     IsoViewerFx isoViewerFx;
+    File currentDir;
 
     public FileOpenEventHandler(Stage stage, IsoViewerFx isoViewerFx) {
         this.stage = stage;
@@ -38,16 +38,27 @@ public class FileOpenEventHandler implements EventHandler<ActionEvent> {
     public void handle(ActionEvent event) {
 
 
-//Set extension filter
+        FileChooser fileChooser = new FileChooser();
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("MP4 files", "*.mp4", "*.uvu", "*.m4v", "*.m4a", "*.uva", "*.uvv", "*.uvt"),
                 new FileChooser.ExtensionFilter("All files", "*.*"));
 
-//Show open file dialog
+        //Open directory from existing directory
+        if(currentDir != null){
+            fileChooser.setInitialDirectory(currentDir);
+        }
+
+        //Set extension filter
+        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AVI files (*.avi)", "*.avi");
+        fileChooser.getExtensionFilters().add(extFilter);
+
+        //Show open file dialog
         File file = fileChooser.showOpenDialog(stage);
+
         if (file != null) {
             stage.setTitle(file.getPath());
             try {
+                currentDir = file.getParentFile();
                 isoViewerFx.openFile(file);
 
             } catch (IOException e) {
