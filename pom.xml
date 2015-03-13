@@ -4,7 +4,7 @@
     <groupId>de.sannies.isoviewer</groupId>
     <packaging>jar</packaging>
     <name>ISO Viewer</name>
-    <version>1.0.4-SNAPSHOT</version>
+    <version>1.0.6-SNAPSHOT</version>
     <description>The ISO Viewer is a UI Tool for viewing ISO Box files (see ISO/IEC 14496-12). Useful for looking into
         Apple Quicktime Movies, DCF files, PDCF files, MP4 files and other ISO Box files.
     </description>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>com.googlecode.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.0.5.3</version>
+            <version>1.0.5.8</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
@@ -145,7 +145,7 @@
     <repositories>
         <repository>
             <id>mp4parser-staging</id>
-            <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1049</url>
+            <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1059</url>
         </repository>
     </repositories>
 
