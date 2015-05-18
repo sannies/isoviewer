@@ -21,12 +21,12 @@ import java.nio.ByteBuffer;
 /**
 * Created by sannies on 27.10.2014.
 */
-public class NalWrapper {
+public class AvcNalWrapper {
     ByteBuffer data;
     private int nal_ref_idc;
     private int nal_unit_type;
 
-    public NalWrapper(ByteBuffer data) {
+    public AvcNalWrapper(ByteBuffer data) {
         this.data = data;
         int type = data.get();
         this.nal_ref_idc = (type >> 5) & 3;

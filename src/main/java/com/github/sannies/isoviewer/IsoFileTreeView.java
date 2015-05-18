@@ -178,7 +178,12 @@ public class IsoFileTreeView extends TreeView<Box> {
         }
 
         private String getString() {
-            return getItem() == null ? "" : Path.createPath(getItem());
+            if (getItem() == null) {
+                return "";
+            } else {
+                String path = Path.createPath(getItem());
+                return path.substring(path.lastIndexOf("/"));
+            }
         }
     }
 }

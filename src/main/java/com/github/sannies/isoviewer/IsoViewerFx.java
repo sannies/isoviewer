@@ -18,6 +18,7 @@ package com.github.sannies.isoviewer;
 
 import com.coremedia.iso.IsoFile;
 import com.coremedia.iso.IsoTypeReaderVariable;
+import com.coremedia.iso.boxes.Box;
 import com.coremedia.iso.boxes.SchemeTypeBox;
 import com.coremedia.iso.boxes.TrackBox;
 import com.github.sannies.isoviewer.hex.JHexEditor;
@@ -27,6 +28,7 @@ import com.googlecode.mp4parser.authoring.Sample;
 import com.googlecode.mp4parser.authoring.Track;
 import com.googlecode.mp4parser.util.Path;
 import com.mp4parser.iso14496.part15.AvcConfigurationBox;
+import com.mp4parser.iso14496.part15.HevcConfigurationBox;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -142,11 +144,19 @@ public class IsoViewerFx extends Application {
 
 
         ListView<Sample> left = new ListView<Sample>(FXCollections.observableList(track.getSamples()));
-        final AvcConfigurationBox avcC = Path.getPath(track.getSampleDescriptionBox(), "avc.[0]/avcC[0]");
-        if (avcC == null) {
-            left.setCellFactory(new SampleRenderCallback());
+        Box vcC = Path.getPath(track.getSampleDescriptionBox(), "....[0]/avcC[0]");
+        int lengthSize = 0;
+        if (vcC == null) {
+            vcC = Path.getPath(track.getSampleDescriptionBox(), "....[0]/hvcC[0]");
+            if (vcC != null) {
+                lengthSize = ((HevcConfigurationBox) vcC).getLengthSizeMinusOne() + 1;
+                left.setCellFactory(new HvcSampleRenderCallback(lengthSize));
+            } else {
+                left.setCellFactory(new SampleRenderCallback());
+            }
         } else {
-            left.setCellFactory(new AvcSampleRenderCallback(avcC.getLengthSizeMinusOne() + 1));
+            lengthSize = ((AvcConfigurationBox) vcC).getLengthSizeMinusOne() + 1;
+            left.setCellFactory(new AvcSampleRenderCallback(lengthSize));
         }
         trackTabSplitPane.getItems().add(left);
 
@@ -155,9 +165,11 @@ public class IsoViewerFx extends Application {
         trackTabSplitPane.getItems().add(initialHex);
 
 
+        final Box finalVcC = vcC;
+        final int finalLengthSize = lengthSize;
         left.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Sample>() {
             public void changed(ObservableValue<? extends Sample> observable, Sample oldValue, Sample newValue) {
-                if (avcC == null) {
+                if (finalVcC == null) {
                     SwingNode hex = new SwingNode();
                     trackTabSplitPane.getItems().set(1, hex);
                     hex.setContent(new JHexEditor(newValue.asByteBuffer()));
@@ -171,11 +183,16 @@ public class IsoViewerFx extends Application {
 
                     while (s.remaining() > 0) {
                         ByteBuffer hexSource = s.slice();
-                        int length = l2i(IsoTypeReaderVariable.read(s, avcC.getLengthSizeMinusOne() + 1));
-                        NalWrapper nalWrapper = new NalWrapper((ByteBuffer) s.slice().limit(length));
+                        int length = l2i(IsoTypeReaderVariable.read(s, finalLengthSize));
+                        Object nalWrapper;
+                        if (finalVcC instanceof AvcConfigurationBox) {
+                            nalWrapper = new AvcNalWrapper((ByteBuffer) s.slice().limit(length));
+                        } else {// if (finalVcC instanceof HevcConfigurationBox) {
+                            nalWrapper = new HvcNalWrapper((ByteBuffer) s.slice().limit(length));
+                        }
                         s.position(s.position() + length);
 
-                        hexSource.limit(length + avcC.getLengthSizeMinusOne() + 1);
+                        hexSource.limit(length + finalLengthSize);
                         SwingNode nalSwingNode = new SwingNode();
                         JHexEditor jHexEditor = new JHexEditor(hexSource);
                         nalSwingNode.setContent(jHexEditor);
@@ -269,7 +286,44 @@ public class IsoViewerFx extends Application {
                         while (s.remaining() > 0) {
                             int length = l2i(IsoTypeReaderVariable.read(s, nalUnitLength));
 
-                            text += new NalWrapper((ByteBuffer) s.slice().limit(length)).toString();
+                            text += new AvcNalWrapper((ByteBuffer) s.slice().limit(length)).toString();
+                            s.position(s.position() + length);
+                            if (s.remaining() > 0) {
+                                text += ", ";
+                            } else {
+                                text += "]";
+                            }
+                        }
+                        setText(text);
+                    }
+                }
+            };
+        }
+    }
+
+    private static class HvcSampleRenderCallback implements Callback<ListView<Sample>, ListCell<Sample>> {
+        int nalUnitLength;
+
+        public HvcSampleRenderCallback(int nalUnitLength) {
+            this.nalUnitLength = nalUnitLength;
+        }
+
+        public ListCell<Sample> call(ListView<Sample> p) {
+            return new ListCell<Sample>() {
+                @Override
+                public void updateItem(Sample item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (empty) {
+                        setText(null);
+                        setGraphic(null);
+                    } else {
+                        ByteBuffer s = item.asByteBuffer();
+                        s.rewind();
+                        String text = "HvcSample(" + getIndex() + "): " + item.getSize() + " bytes [";
+                        while (s.remaining() > 0) {
+                            int length = l2i(IsoTypeReaderVariable.read(s, nalUnitLength));
+
+                            text += new HvcNalWrapper((ByteBuffer) s.slice().limit(length)).toString();
                             s.position(s.position() + length);
                             if (s.remaining() > 0) {
                                 text += ", ";
