@@ -16,7 +16,7 @@
 
 package com.github.sannies.isoviewer;
 
-import com.googlecode.mp4parser.authoring.tracks.h265.NalUnitTypes;
+import com.googlecode.mp4parser.authoring.tracks.h265.H265NalUnitTypes;
 
 import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
@@ -39,7 +39,7 @@ public class HvcNalWrapper {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        for (Field f : NalUnitTypes.class.getFields()) {
+        for (Field f : H265NalUnitTypes.class.getFields()) {
             try {
                 if (nal_unit_type ==  f.getInt(null)) {
                     sb.append(f.getName());

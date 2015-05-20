@@ -16,6 +16,9 @@
 
 package com.github.sannies.isoviewer;
 
+import com.googlecode.mp4parser.authoring.tracks.h264.H264NalUnitTypes;
+
+import java.lang.reflect.Field;
 import java.nio.ByteBuffer;
 
 /**
@@ -36,41 +39,16 @@ public class AvcNalWrapper {
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder();
-        switch (nal_unit_type) {
-            case 1:
-                sb.append("NonIDR");
-                break;
-            case 2:
-                sb.append("Part.A");
-                break;
-            case 3:
-                sb.append("Part.B");
-                break;
-            case 4:
-                sb.append("Part.C");
-                break;
-            case 5:
-                sb.append("IDR");
-                break;
-            case 6:
-                sb.append("SEI");
-                break;
-            case 7:
-                sb.append("SPS");
-                break;
-            case 8:
-                sb.append("PPS");
-                break;
-            case 9:
-                sb.append("AUD");
-                return sb.toString();
-            case 10:
-                sb.append("EndOfSeq");
-                break;
-            case 11:
-                sb.append("EndOfStr");
-                break;
+        for (Field f : H264NalUnitTypes.class.getFields()) {
+            try {
+                if (nal_unit_type ==  f.getInt(null)) {
+                    sb.append(f.getName());
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException();
+            }
         }
+      
         sb.append("{").append("type:").append(nal_unit_type).append(",idc:").append(nal_ref_idc).append(",size:").append(data.limit());
         sb.append('}');
 //            sb.append("{data=").append(data);
