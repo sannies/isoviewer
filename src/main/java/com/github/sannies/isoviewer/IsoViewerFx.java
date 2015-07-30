@@ -84,7 +84,7 @@ public class IsoViewerFx extends Application {
             }
 
         }
-        userPrefs.put("openedFile", f.getAbsolutePath());
+        /*userPrefs.put("openedFile", f.getAbsolutePath());*/
     }
 
     @Override
@@ -228,7 +228,7 @@ public class IsoViewerFx extends Application {
         stage.setWidth(w);
         stage.setHeight(h);
 
-        String openFile = userPrefs.get("openedFile", "doesnotexist");
+      /*  String openFile = userPrefs.get("openedFile", "doesnotexist");
         if (new File(openFile).exists()) {
             try {
                 openFile(new File(openFile));
@@ -237,7 +237,7 @@ public class IsoViewerFx extends Application {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     public void storePosAndSize(Stage stage) {

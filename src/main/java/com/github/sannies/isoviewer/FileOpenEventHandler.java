@@ -23,11 +23,12 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.prefs.Preferences;
 
 public class FileOpenEventHandler implements EventHandler<ActionEvent> {
+    Preferences userPrefs = Preferences.userNodeForPackage(getClass());
     Stage stage;
     IsoViewerFx isoViewerFx;
-    File currentDir;
 
     public FileOpenEventHandler(Stage stage, IsoViewerFx isoViewerFx) {
         this.stage = stage;
@@ -39,18 +40,18 @@ public class FileOpenEventHandler implements EventHandler<ActionEvent> {
 
 
         FileChooser fileChooser = new FileChooser();
+        String initialDirectory = userPrefs.get("fileChooserInitialDirectory", null);
+        if (initialDirectory != null && new File(initialDirectory).exists() && new File(initialDirectory).isDirectory()) {
+            fileChooser.setInitialDirectory(new File(initialDirectory));
+        }
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("MP4 files", "*.mp4", "*.uvu", "*.m4v", "*.m4a", "*.uva", "*.uvv", "*.uvt"),
+                new FileChooser.ExtensionFilter("MP4 files", "*.mp4", "*.uvu", "*.m4v", "*.m4a", "*.uva", "*.uvv", "*.uvt", "*.mov", "*.m4s"),
                 new FileChooser.ExtensionFilter("All files", "*.*"));
 
-        //Open directory from existing directory
-        if(currentDir != null){
-            fileChooser.setInitialDirectory(currentDir);
-        }
 
         //Set extension filter
-        FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AVI files (*.avi)", "*.avi");
-        fileChooser.getExtensionFilters().add(extFilter);
+        //FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("AVI files (*.avi)", "*.avi");
+        //fileChooser.getExtensionFilters().add(extFilter);
 
         //Show open file dialog
         File file = fileChooser.showOpenDialog(stage);
@@ -58,7 +59,7 @@ public class FileOpenEventHandler implements EventHandler<ActionEvent> {
         if (file != null) {
             stage.setTitle(file.getPath());
             try {
-                currentDir = file.getParentFile();
+                userPrefs.put("fileChooserInitialDirectory", file.getParentFile().getAbsolutePath());
                 isoViewerFx.openFile(file);
 
             } catch (IOException e) {
