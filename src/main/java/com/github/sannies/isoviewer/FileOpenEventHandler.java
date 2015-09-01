@@ -45,7 +45,7 @@ public class FileOpenEventHandler implements EventHandler<ActionEvent> {
             fileChooser.setInitialDirectory(new File(initialDirectory));
         }
         fileChooser.getExtensionFilters().addAll(
-                new FileChooser.ExtensionFilter("MP4 files", "*.mp4", "*.uvu", "*.m4v", "*.m4a", "*.uva", "*.uvv", "*.uvt", "*.mov", "*.m4s"),
+                new FileChooser.ExtensionFilter("MP4 files", "*.mp4", "*.uvu", "*.m4v", "*.m4a", "*.uva", "*.uvv", "*.uvt", "*.mov", "*.m4s", "*.ism?"),
                 new FileChooser.ExtensionFilter("All files", "*.*"));
 
 

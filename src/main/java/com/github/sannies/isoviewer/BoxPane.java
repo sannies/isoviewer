@@ -111,15 +111,16 @@ public class BoxPane extends TitledPane {
                             Object o = propertyDescriptorStringCellDataFeatures.getValue().getReadMethod().invoke(box);
                             if (o instanceof List) {
                                 ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>((List<Object>) o));
-                                lv.setMinHeight(20);
+                                lv.setMinHeight(60);
                                 lv.setPrefHeight(((List) o).size() * 15 + 20);
                                 lv.setMaxHeight(200);
-                                TitledPane tp = new TitledPane("List contents", lv);
+
+                                TitledPane tp = new TitledPane("List contents (" + ((List) o).size() + ")", lv);
                                 tp.setExpanded(false);
                                 return tp;
                             } else if (o != null && o.getClass().isArray()) {
                                 int length = Array.getLength(o);
-                                List<Object> values = new LinkedList<Object>();
+                                List<Object> values = new ArrayList<Object>();
                                 for (int i = 0; i < length; i++) {
                                     Object value = Array.get(o, i);
                                     if (value instanceof Box) {
@@ -130,10 +131,11 @@ public class BoxPane extends TitledPane {
                                 }
 
                                 ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>(values));
+
                                 lv.setMinHeight(20);
                                 lv.setPrefHeight(length * 15 + 20);
                                 lv.setMaxHeight(200);
-                                TitledPane tp = new TitledPane("List contents", lv);
+                                TitledPane tp = new TitledPane("Array contents (" + values.size() + ")", lv);
                                 tp.setExpanded(false);
                                 return tp;
                             } else {
