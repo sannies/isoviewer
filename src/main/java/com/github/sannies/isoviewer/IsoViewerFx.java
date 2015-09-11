@@ -42,7 +42,9 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.stage.Screen;
 
+import javafx.geometry.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -223,6 +225,12 @@ public class IsoViewerFx extends Application {
         double y = userPrefs.getDouble("stage.y", 100);
         double w = userPrefs.getDouble("stage.width", 400);
         double h = userPrefs.getDouble("stage.height", 400);
+        
+        javafx.geometry.Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        if(x < 0 || y < 0 || x > primaryScreenBounds.getWidth() || y > primaryScreenBounds.getHeight()) {
+            x = 100;
+            y = 100;
+        }
         stage.setX(x);
         stage.setY(y);
         stage.setWidth(w);
