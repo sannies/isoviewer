@@ -22,6 +22,7 @@ import com.googlecode.mp4parser.h264.read.CAVLCReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 
 /**
@@ -39,15 +40,19 @@ public class AvcNalWrapper {
         this.nal_ref_idc = (type >> 5) & 3;
         this.nal_unit_type = type & 0x1f;
         byte[] d = new byte[2];
-        try {
-            data.position(1);
-            data.get(d);
+        if (nal_unit_type >= 1 && nal_unit_type <= 5) {
+            try {
+                data.position(1);
+                data.get(d);
 
-            CAVLCReader reader = new CAVLCReader(new ByteArrayInputStream(d));
-            int first_mb_in_slice = reader.readUE("SliceHeader: first_mb_in_slice");
-            slice_type = reader.readUE("SliceHeader: slice_type");
-        } catch (IOException e) {
-            e.printStackTrace();
+                CAVLCReader reader = new CAVLCReader(new ByteArrayInputStream(d));
+                int first_mb_in_slice = reader.readUE("SliceHeader: first_mb_in_slice");
+                slice_type = reader.readUE("SliceHeader: slice_type");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (BufferUnderflowException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -65,8 +70,10 @@ public class AvcNalWrapper {
             }
         }
 
-
-        sb.append("{slice_type:").append("" + slice_type).append(",idc:").append(nal_ref_idc).append(",size:").append(data.limit());
+        if (nal_unit_type >= 1 && nal_unit_type <= 5) {
+            sb.append("{slice_type:").append("" + slice_type).append(",idc:").append(nal_ref_idc);
+        }
+        sb.append(",size:").append(data.limit());
         sb.append('}');
 //            sb.append("{data=").append(data);
 //            sb.append('}');

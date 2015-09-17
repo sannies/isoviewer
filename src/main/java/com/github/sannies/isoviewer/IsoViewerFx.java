@@ -45,6 +45,7 @@ import javafx.util.Callback;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.BufferUnderflowException;
 import java.nio.ByteBuffer;
 import java.util.List;
 import java.util.prefs.Preferences;
@@ -285,13 +286,18 @@ public class IsoViewerFx extends Application {
                         String text = "AvcSample(" + getIndex() + "): " + item.getSize() + " bytes [";
                         while (s.remaining() > 0) {
                             int length = l2i(IsoTypeReaderVariable.read(s, nalUnitLength));
-
-                            text += new AvcNalWrapper((ByteBuffer) s.slice().limit(length)).toString();
-                            s.position(s.position() + length);
-                            if (s.remaining() > 0) {
-                                text += ", ";
-                            } else {
-                                text += "]";
+                            try {
+                                text += new AvcNalWrapper((ByteBuffer) s.slice().limit(length)).toString();
+                                s.position(s.position() + length);
+                                if (s.remaining() > 0) {
+                                    text += ", ";
+                                } else {
+                                    text += "]";
+                                }
+                            } catch (BufferUnderflowException e) {
+                                System.err.println("Sample " + getIndex() + " is not ok.");
+                                e.printStackTrace();;
+                                return;
                             }
                         }
                         setText(text);
