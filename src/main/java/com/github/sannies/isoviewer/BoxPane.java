@@ -112,7 +112,11 @@ public class BoxPane extends TitledPane {
                             if (o instanceof List) {
                                 ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>((List<Object>) o));
                                 lv.setMinHeight(60);
-                                lv.setPrefHeight(((List) o).size() * 15 + 20);
+
+                                int size = ((List) o).size()>0?((List) o).get(0).toString().split("\r\n|\r|\n").length:1;
+
+
+                                lv.setPrefHeight(((List) o).size() * 15 * size + 20);
                                 lv.setMaxHeight(200);
 
                                 TitledPane tp = new TitledPane("List contents (" + ((List) o).size() + ")", lv);
@@ -131,9 +135,9 @@ public class BoxPane extends TitledPane {
                                 }
 
                                 ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>(values));
-
+                                int size = values.size()>0?values.get(0).toString().split("\r\n|\r|\n").length:1;
                                 lv.setMinHeight(20);
-                                lv.setPrefHeight(length * 15 + 20);
+                                lv.setPrefHeight(length * 15 * size + 20);
                                 lv.setMaxHeight(200);
                                 TitledPane tp = new TitledPane("Array contents (" + values.size() + ")", lv);
                                 tp.setExpanded(false);
