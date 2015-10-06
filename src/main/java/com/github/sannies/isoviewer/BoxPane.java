@@ -50,7 +50,8 @@ public class BoxPane extends TitledPane {
             "header",
             "isoFile",
             "parent",
-            "content"
+            "content",
+            "fileChannel"
     );
 
 
@@ -110,38 +111,67 @@ public class BoxPane extends TitledPane {
                         try {
                             Object o = propertyDescriptorStringCellDataFeatures.getValue().getReadMethod().invoke(box);
                             if (o instanceof List) {
-                                ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>((List<Object>) o));
-                                lv.setMinHeight(60);
+                                int listSize = ((List) o).size();
 
-                                int size = ((List) o).size()>0?((List) o).get(0).toString().split("\r\n|\r|\n").length:1;
+                                if (listSize < 5) {
+                                    TextField t = new TextField(o.toString());
+                                    t.setEditable(false);
+                                    return t;
+                                } else {
+                                    ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>((List<Object>) o));
+                                    lv.setMinHeight(60);
+                                    int size = listSize > 0 ? ((List) o).get(0).toString().split("\r\n|\r|\n").length : 1;
 
 
-                                lv.setPrefHeight(((List) o).size() * 15 * size + 20);
-                                lv.setMaxHeight(200);
+                                    lv.setPrefHeight(((List) o).size() * 15 * size + 20);
+                                    lv.setMaxHeight(200);
 
-                                TitledPane tp = new TitledPane("List contents (" + ((List) o).size() + ")", lv);
-                                tp.setExpanded(false);
-                                return tp;
-                            } else if (o != null && o.getClass().isArray()) {
-                                int length = Array.getLength(o);
-                                List<Object> values = new ArrayList<Object>();
-                                for (int i = 0; i < length; i++) {
-                                    Object value = Array.get(o, i);
-                                    if (value instanceof Box) {
-                                        values.add(Path.createPath((Box) value));
-                                    } else {
-                                        values.add(value);
-                                    }
+                                    TitledPane tp = new TitledPane("List contents (" + ((List) o).size() + ")", lv);
+                                    tp.setExpanded(false);
+                                    return tp;
+
                                 }
 
-                                ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>(values));
-                                int size = values.size()>0?values.get(0).toString().split("\r\n|\r|\n").length:1;
-                                lv.setMinHeight(20);
-                                lv.setPrefHeight(length * 15 * size + 20);
-                                lv.setMaxHeight(200);
-                                TitledPane tp = new TitledPane("Array contents (" + values.size() + ")", lv);
-                                tp.setExpanded(false);
-                                return tp;
+
+                            } else if (o != null && o.getClass().isArray()) {
+                                int length = Array.getLength(o);
+
+                                if (length < 5) {
+                                    String v = "[";
+                                    for (int i = 0; i < length; i++) {
+                                        v += Array.get(o, i);
+                                        v += ", ";
+                                    }
+                                    v = v.substring(0, v.length() - 2);
+                                    v += "]";
+                                    TextField t = new TextField(v);
+                                    t.setEditable(false);
+                                    return t;
+                                } else {
+                                    List<Object> values = new ArrayList<Object>();
+                                    for (int i = 0; i < length; i++) {
+                                        Object value = Array.get(o, i);
+                                        if (value instanceof Box) {
+                                            values.add(Path.createPath((Box) value));
+                                        } else {
+                                            values.add(value);
+                                        }
+                                    }
+
+                                    ListView<Object> lv = new ListView<Object>(new ObservableListWrapper<Object>(values));
+                                    int size = values.size() > 0 ? values.get(0).toString().split("\r\n|\r|\n").length : 1;
+                                    lv.setMinHeight(20);
+                                    lv.setPrefHeight(length * 15 * size + 20);
+                                    lv.setMaxHeight(200);
+                                    TitledPane tp = new TitledPane("Array contents (" + values.size() + ")", lv);
+                                    if (length > 3) {
+                                        tp.setExpanded(false);
+                                    }
+                                    return tp;
+
+                                }
+
+
                             } else {
                                 TextField t = new TextField(o != null ? o.toString() : "null");
                                 t.setEditable(false);
