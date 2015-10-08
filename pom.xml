@@ -4,7 +4,7 @@
     <groupId>de.sannies.isoviewer</groupId>
     <packaging>jar</packaging>
     <name>ISO Viewer</name>
-    <version>1.10-SNAPSHOT</version>
+    <version>1.11-SNAPSHOT</version>
     <description>The ISO Viewer is a UI Tool for viewing ISO Box files (see ISO/IEC 14496-12). Useful for looking into
         MP4 files such as DASH segments or stand alone video file
     </description>
@@ -121,7 +121,7 @@
         <dependency>
             <groupId>com.googlecode.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.1.12</version>
+            <version>1.1.13</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
@@ -146,7 +146,7 @@
         <repositories>
                 <repository>
                         <id>mp4parserstaging</id>
-                        <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1075</url>
+                        <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1082</url>
                 </repository>
         </repositories>
 
