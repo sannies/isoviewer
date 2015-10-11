@@ -40,7 +40,8 @@ import java.nio.ByteBuffer;
 public class JHexEditor extends JPanel implements FocusListener, AdjustmentListener, MouseWheelListener {
     ByteBuffer buff;
     public int cursor;
-    protected static Font font = new Font("Monospaced", 0, 12);
+//    protected static Font font = new Font("Monospaced", 0, 12);
+    protected static Font font = new Font("Courier New", Font.PLAIN, 12);
     protected int border = 2;
     public boolean DEBUG = false;
     private JScrollBar scrollBar;
