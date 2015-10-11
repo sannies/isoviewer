@@ -34,7 +34,6 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
-import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -44,12 +43,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 import javafx.stage.Screen;
-import javafx.scene.Group;
-
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.Dragboard;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 
 import javafx.geometry.Rectangle2D;
 import java.io.File;
@@ -96,8 +89,7 @@ public class IsoViewerFx extends Application {
         /*userPrefs.put("openedFile", f.getAbsolutePath());*/
     }
 
-    @SuppressWarnings("restriction")
-	@Override
+    @Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         BorderPane hBox = new BorderPane();
@@ -118,41 +110,9 @@ public class IsoViewerFx extends Application {
 
         hBox.setCenter(boxesOrTracksTabPane);
         Scene scene = new Scene(hBox, 450, 300);
-//        stage.setScene(scene);
-        scene.setOnDragOver(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                if (db.hasFiles()) {
-                    event.acceptTransferModes(TransferMode.COPY);
-                } else {
-                    event.consume();
-                }
-            }
-        });
-        scene.setOnDragDropped(new EventHandler<DragEvent>() {
-            public void handle(DragEvent event) {
-                Dragboard db = event.getDragboard();
-                boolean success = false;
-                if (db.hasFiles()) {
-                    success = true;
-                    String filePath = null;
-                    for (File file:db.getFiles()) {
-                        filePath = file.getAbsolutePath();
-                    }
-                    try {
-                        openFile(new File(filePath));
-                    } catch (RuntimeException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                event.setDropCompleted(success);
-                event.consume();
-            }
-        });
-        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon.png")));
         stage.setScene(scene);
+        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon.png")));
+
         loadPosAndSize();
         stage.show();
 
