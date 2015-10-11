@@ -122,8 +122,21 @@ public class IsoViewerFx extends Application {
         scene.setOnDragOver(new EventHandler<DragEvent>() {
             public void handle(DragEvent event) {
                 Dragboard db = event.getDragboard();
+                
+                final boolean isAccepted = db.getFiles().get(0).getName().toLowerCase().endsWith(".mp4")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvu")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".m4v")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".m4a")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uva")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvv")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvt")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".mov")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".m4s")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".ism");
                 if (db.hasFiles()) {
-                    event.acceptTransferModes(TransferMode.COPY);
+                	if (isAccepted) {
+                        event.acceptTransferModes(TransferMode.COPY);
+                    }
                 } else {
                     event.consume();
                 }
