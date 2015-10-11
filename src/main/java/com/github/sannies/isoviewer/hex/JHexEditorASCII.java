@@ -90,6 +90,7 @@ public class JHexEditorASCII extends JComponent implements MouseListener, KeyLis
             }
 
             String s = Iso8859_1.convert(new byte[]{he.buff.get()});
+            s = s.replaceAll("", "x");
 //      if ((he.buff[n] < 20) || (he.buff[n] > 126)) s = "" + (char) 16;
             he.printString(g, s, (x++), y);
             if (x == 16) {
