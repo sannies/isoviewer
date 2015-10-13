@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>isoviewer</artifactId>
     <groupId>de.sannies.isoviewer</groupId>
@@ -76,7 +77,8 @@
                         </goals>
                         <configuration>
                             <transformers>
-                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
                                     <mainClass>com.github.sannies.isoviewer.IsoViewerFx</mainClass>
                                 </transformer>
                             </transformers>
@@ -84,35 +86,35 @@
                     </execution>
                 </executions>
             </plugin>
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>2.3.1</version>
-                <executions>
-                    <execution>
-                        <id>signit</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>sign</goal>
-                        </goals>
-                        <configuration>
-                            <keystore>${project.basedir}/src/etc/keystore.jks</keystore>
-                            <alias>isobox4j</alias>
-                            <keypass>xxxxxx</keypass>
-                            <storepass>xxxxxx</storepass>
-                            <skip>false</skip>
-                            <verbose>true</verbose>
-                        </configuration>
-                    </execution>
-                </executions>
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <mainClass>com.googlecode.mp4parser.isoviewer.IsoViewer</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>-->
+            <!--            <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-jar-plugin</artifactId>
+                            <version>2.3.1</version>
+                            <executions>
+                                <execution>
+                                    <id>signit</id>
+                                    <phase>package</phase>
+                                    <goals>
+                                        <goal>sign</goal>
+                                    </goals>
+                                    <configuration>
+                                        <keystore>${project.basedir}/src/etc/keystore.jks</keystore>
+                                        <alias>isobox4j</alias>
+                                        <keypass>xxxxxx</keypass>
+                                        <storepass>xxxxxx</storepass>
+                                        <skip>false</skip>
+                                        <verbose>true</verbose>
+                                    </configuration>
+                                </execution>
+                            </executions>
+                            <configuration>
+                                <archive>
+                                    <manifest>
+                                        <mainClass>com.googlecode.mp4parser.isoviewer.IsoViewer</mainClass>
+                                    </manifest>
+                                </archive>
+                            </configuration>
+                        </plugin>-->
 
         </plugins>
     </build>
@@ -121,7 +123,7 @@
         <dependency>
             <groupId>com.googlecode.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.1.13</version>
+            <version>1.1.14</version>
         </dependency>
         <dependency>
             <groupId>org.jdesktop.bsaf</groupId>
@@ -143,18 +145,18 @@
     </dependencies>
 
 
-        <repositories>
-                <repository>
-                        <id>mp4parserstaging</id>
-                        <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1082</url>
-                </repository>
-        </repositories>
+    <repositories>
+        <repository>
+            <id>mp4parserstaging</id>
+            <url>https://oss.sonatype.org/content/repositories/comgooglecodemp4parser-1083</url>
+        </repository>
+    </repositories>
 
 
     <scm>
         <connection>scm:git:git@github.com:sannies/isoviewer.git</connection>
         <developerConnection>scm:git:git@github.com:sannies/isoviewer.git</developerConnection>
-      <tag>HEAD</tag>
-  </scm>
+        <tag>HEAD</tag>
+    </scm>
 
 </project>
