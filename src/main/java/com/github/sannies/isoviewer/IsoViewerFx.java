@@ -34,6 +34,7 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.embed.swing.SwingNode;
+import javafx.event.EventHandler;
 import javafx.geometry.Side;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -42,7 +43,15 @@ import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import javafx.stage.Screen;
+import javafx.scene.Group;
 
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.TransferMode;
+
+import javafx.geometry.Rectangle2D;
 import java.io.File;
 import java.io.IOException;
 import java.nio.BufferUnderflowException;
@@ -88,7 +97,8 @@ public class IsoViewerFx extends Application {
         /*userPrefs.put("openedFile", f.getAbsolutePath());*/
     }
 
-    @Override
+    @SuppressWarnings("restriction")
+	@Override
     public void start(Stage stage) throws Exception {
         this.stage = stage;
         BorderPane hBox = new BorderPane();
@@ -109,9 +119,54 @@ public class IsoViewerFx extends Application {
 
         hBox.setCenter(boxesOrTracksTabPane);
         Scene scene = new Scene(hBox, 450, 300);
-        stage.setScene(scene);
+//        stage.setScene(scene);
+        scene.setOnDragOver(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                
+                final boolean isAccepted = db.getFiles().get(0).getName().toLowerCase().endsWith(".mp4")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvu")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".m4v")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".m4a")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uva")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvv")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvt")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".mov")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".m4s")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".ism");
+                if (db.hasFiles()) {
+                	if (isAccepted) {
+                        event.acceptTransferModes(TransferMode.COPY);
+                    }
+                } else {
+                    event.consume();
+                }
+            }
+        });
+        scene.setOnDragDropped(new EventHandler<DragEvent>() {
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles()) {
+                    success = true;
+                    String filePath = null;
+                    for (File file:db.getFiles()) {
+                        filePath = file.getAbsolutePath();
+                    }
+                    try {
+                        openFile(new File(filePath));
+                    } catch (RuntimeException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                event.setDropCompleted(success);
+                event.consume();
+            }
+        });
         stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/icon.png")));
-
+        stage.setScene(scene);
         loadPosAndSize();
         stage.show();
 
@@ -224,6 +279,12 @@ public class IsoViewerFx extends Application {
         double y = userPrefs.getDouble("stage.y", 100);
         double w = userPrefs.getDouble("stage.width", 400);
         double h = userPrefs.getDouble("stage.height", 400);
+        
+        javafx.geometry.Rectangle2D primaryScreenBounds = Screen.getPrimary().getVisualBounds();
+        if(x < 0 || y < 0 || x > primaryScreenBounds.getWidth() || y > primaryScreenBounds.getHeight()) {
+            x = 100;
+            y = 100;
+        }
         stage.setX(x);
         stage.setY(y);
         stage.setWidth(w);
