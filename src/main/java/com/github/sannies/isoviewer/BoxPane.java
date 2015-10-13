@@ -35,6 +35,7 @@ import java.beans.PropertyDescriptor;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
+import java.math.BigInteger;
 import java.util.*;
 
 /**
@@ -142,7 +143,9 @@ public class BoxPane extends TitledPane {
                                         v += Array.get(o, i);
                                         v += ", ";
                                     }
-                                    v = v.substring(0, v.length() - 2);
+                                    if (length > 2) {
+                                        v = v.substring(0, v.length() - 2);
+                                    }
                                     v += "]";
                                     TextField t = new TextField(v);
                                     t.setEditable(false);
@@ -173,9 +176,23 @@ public class BoxPane extends TitledPane {
 
 
                             } else {
-                                TextField t = new TextField(o != null ? o.toString() : "null");
-                                t.setEditable(false);
-                                return t;
+                                if ("flags".equals(propertyDescriptorStringCellDataFeatures.getValue().getName())) {
+                                    int v = o == null?0:((Integer) o);
+                                    String s = "";
+                                    for (int i = 0; i < 24; i++) {
+                                        if ((v & (1<<i)) > 0) {
+                                            s += "0x" + Integer.toHexString(v & (1<<i)) + ", ";
+                                        }
+                                    }
+
+                                    TextField t = new TextField(s);
+                                    t.setEditable(false);
+                                    return t;
+                                } else {
+                                    TextField t = new TextField(o != null ? o.toString() : "null");
+                                    t.setEditable(false);
+                                    return t;
+                                }
                             }
                         } catch (IllegalAccessException e) {
                             return new Text(e.getLocalizedMessage());
