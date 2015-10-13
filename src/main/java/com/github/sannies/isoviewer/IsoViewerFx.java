@@ -132,6 +132,8 @@ public class IsoViewerFx extends Application {
                         || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvv")
                         || db.getFiles().get(0).getName().toLowerCase().endsWith(".uvt")
                         || db.getFiles().get(0).getName().toLowerCase().endsWith(".mov")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".isma")
+                        || db.getFiles().get(0).getName().toLowerCase().endsWith(".ismv")
                         || db.getFiles().get(0).getName().toLowerCase().endsWith(".m4s")
                         || db.getFiles().get(0).getName().toLowerCase().endsWith(".ism");
                 if (db.hasFiles()) {
