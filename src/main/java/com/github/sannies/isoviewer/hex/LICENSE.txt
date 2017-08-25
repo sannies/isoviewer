@@ -1,4 +1,0 @@
-The classes in this package have been written by German Laullon and have been extracted from
-his SourceForge project JHeComponent (http://sourceforge.net/projects/jhecomponent/). The
-classes in this package (com.coremedia.iso.gui.hex) have been released by German Laullon under
-the GPL.
