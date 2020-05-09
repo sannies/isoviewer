@@ -39,7 +39,15 @@ class Dummy() : BasicContainer(), Box {
 class BoxParser(private val offsets: MutableMap<Box, Long>): PropertyBoxParserImpl() {
     override fun parseBox(byteChannel: ReadableByteChannel?, parentType: String?): ParsableBox {
         val p = super.parseBox(byteChannel, parentType)
-        offsets.set(p, (byteChannel as FileChannel).position() - p.size )
+        // special handling for MetaBox
+        if (byteChannel is RewindableReadableByteChannel) {
+            val f = byteChannel.javaClass.getDeclaredField("readableByteChannel");
+            f.trySetAccessible();
+            val byteChannel2 = f.get(byteChannel) as FileChannel
+            offsets.set(p, byteChannel2.position() - p.size)
+        }else{
+            offsets.set(p, (byteChannel as FileChannel).position() - p.size)
+        }
         return p
     }
 

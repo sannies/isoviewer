@@ -19,11 +19,9 @@ package org.mp4parser.isoviewer.views
 import com.sun.javafx.collections.ObservableListWrapper
 import javafx.beans.binding.ObjectBinding
 import javafx.beans.binding.StringBinding
-import javafx.beans.value.ObservableValue
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.text.Text
-import javafx.util.Callback
 import org.mp4parser.Box
 
 import java.beans.BeanInfo
@@ -41,14 +39,14 @@ import java.util.*
 class BoxPane(internal var box: Box) : TitledPane() {
 
     init {
-        var beanInfo: BeanInfo? = null
+        var beanInfo: BeanInfo
         try {
             beanInfo = Introspector.getBeanInfo(box.javaClass)
         } catch (e: IntrospectionException) {
             throw RuntimeException(e)
         }
 
-        val propertyDescriptors = beanInfo!!.propertyDescriptors
+        val propertyDescriptors = beanInfo.propertyDescriptors
         val tableView = TableView<PropertyDescriptor>()
 
         for (propertyDescriptor in propertyDescriptors) {
@@ -84,15 +82,15 @@ class BoxPane(internal var box: Box) : TitledPane() {
                                 t.isEditable = false
                                 return t
                             } else {
-                                val lv = ListView(ObservableListWrapper(o as List<Any>))
+                                val lv = ListView(ObservableListWrapper(o))
                                 lv.minHeight = 60.0
                                 val size = if (listSize > 0) o[0].toString().split("\r\n|\r|\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size else 1
 
 
-                                lv.prefHeight = ((o as List<*>).size * 15 * size + 20).toDouble()
+                                lv.prefHeight = (o.size * 15 * size + 20).toDouble()
                                 lv.maxHeight = 200.0
 
-                                val tp = TitledPane("List contents (" + (o as List<*>).size + ")", lv)
+                                val tp = TitledPane("List contents (" + o.size + ")", lv)
                                 tp.isExpanded = false
                                 return tp
 
