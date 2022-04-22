@@ -16,16 +16,13 @@
 
 package org.mp4parser.isoviewer.views
 
-import com.sun.javafx.collections.ObservableListWrapper
 import javafx.beans.binding.ObjectBinding
 import javafx.beans.binding.StringBinding
-import javafx.beans.value.ObservableValue
+import javafx.collections.FXCollections
 import javafx.scene.Node
 import javafx.scene.control.*
 import javafx.scene.text.Text
-import javafx.util.Callback
 import org.mp4parser.Box
-
 import java.beans.BeanInfo
 import java.beans.IntrospectionException
 import java.beans.Introspector
@@ -84,7 +81,7 @@ class BoxPane(internal var box: Box) : TitledPane() {
                                 t.isEditable = false
                                 return t
                             } else {
-                                val lv = ListView(ObservableListWrapper(o as List<Any>))
+                                val lv = ListView(FXCollections.observableList((o as List<Any>)))
                                 lv.minHeight = 60.0
                                 val size = if (listSize > 0) o[0].toString().split("\r\n|\r|\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size else 1
 
@@ -122,7 +119,7 @@ class BoxPane(internal var box: Box) : TitledPane() {
                                     values.add(value)
                                 }
 
-                                val lv = ListView(ObservableListWrapper(values))
+                                val lv = ListView(FXCollections.observableList(values))
                                 val size = if (values.size > 0) values[0].toString().split("\r\n|\r|\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size else 1
                                 lv.minHeight = 20.0
                                 lv.prefHeight = (length * 15 * size + 20).toDouble()

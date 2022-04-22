@@ -39,7 +39,9 @@ class Dummy() : BasicContainer(), Box {
 class BoxParser(private val offsets: MutableMap<Box, Long>): PropertyBoxParserImpl() {
     override fun parseBox(byteChannel: ReadableByteChannel?, parentType: String?): ParsableBox {
         val p = super.parseBox(byteChannel, parentType)
-        offsets.set(p, (byteChannel as FileChannel).position() - p.size )
+        if ( byteChannel is FileChannel) {
+            offsets.set(p, byteChannel.position() - p.size )
+        }
         return p
     }
 

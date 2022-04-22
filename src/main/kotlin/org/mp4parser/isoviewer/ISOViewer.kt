@@ -1,3 +1,5 @@
+package org.mp4parser.isoviewer
+
 import javafx.application.Application
 import javafx.application.Platform
 import javafx.scene.image.Image

@@ -101,7 +101,6 @@ class MainView : View("ISO Viewer") {
                         selectionModel.selectionMode = SelectionMode.MULTIPLE
 
                         column(" 0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F", String::class) {
-                            addClass()
                             value { param ->
                                 Hex.encodeHex(param.value).replace(Regex("(.{2})"), "$1 ")
                             }
