@@ -60,7 +60,7 @@
         <dependency>
             <groupId>org.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
-            <version>1.9.42-SNAPSHOT</version>
+            <version>1.9.56</version>
         </dependency>
     </dependencies>
 
