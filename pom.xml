@@ -96,7 +96,7 @@
                     <execution>
                         <id>default-cli</id>
                         <configuration>
-                            <mainClass>ISOViewer</mainClass>
+                            <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
                             <options>
 
                             </options>
@@ -111,7 +111,7 @@
                                 <option>-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=localhost:8000</option>
 
                             </options>
-                            <mainClass>ISOViewer</mainClass>
+                            <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
                         </configuration>
                     </execution>
                     <execution>
@@ -121,7 +121,7 @@
                             <options>
                                 <option>-agentlib:jdwp=transport=dt_socket,server=n,address=${jpda.address}</option>
                             </options>
-                            <mainClass>ISOViewer</mainClass>
+                            <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
                         </configuration>
                     </execution>
                 </executions>
