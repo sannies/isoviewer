@@ -34,11 +34,6 @@
         </dependency>
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics</artifactId>
-            <version>17.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.openjfx</groupId>
             <artifactId>javafx-controls</artifactId>
             <version>17.0.1</version>
         </dependency>
@@ -61,6 +56,24 @@
             <groupId>org.mp4parser</groupId>
             <artifactId>isoparser</artifactId>
             <version>1.9.56</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>17.0.1</version>
+            <classifier>win</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>17.0.1</version>
+            <classifier>linux</classifier>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>17.0.1</version>
+            <classifier>mac</classifier>
         </dependency>
     </dependencies>
 
@@ -89,17 +102,63 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>target/jmods</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <outputDirectory>target/jmods</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.4.0</version>
+                <configuration>
+                    <name>TreeFX</name>
+                    <modulePaths>
+                        <modulePath>target/jmods</modulePath>
+                    </modulePaths>
+                    <appVersion>1.0.0</appVersion>
+                    <vendor>org.isoparser</vendor>
+                    <destination>target/dist</destination>
+                    <module>ISOVIEWER/org.mp4parser.isoviewer</module>
+                    <runtimeImage>target/isoviewer-${version}.jar</runtimeImage>
+                    <linuxShortcut>true</linuxShortcut>
+                    <linuxPackageName>ISO Viewer</linuxPackageName>
+                    <linuxAppCategory>Utilities</linuxAppCategory>
+                    <linuxMenuGroup>Utilities</linuxMenuGroup>
+                    <icon>${project.basedir}/src/main/resources/icon.png</icon>
+                    <javaOptions>
+                        <option>-Dfile.encoding=UTF-8</option>
+                    </javaOptions>
+                </configuration>
+            </plugin>
+            <plugin>
                 <groupId>org.openjfx</groupId>
                 <artifactId>javafx-maven-plugin</artifactId>
-                <version>0.0.6</version>
+                <version>0.0.8</version>
                 <executions>
                     <execution>
                         <id>default-cli</id>
                         <configuration>
                             <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
-                            <options>
-
-                            </options>
                         </configuration>
                     </execution>
                     <execution>

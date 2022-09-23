@@ -116,7 +116,7 @@ class MainView : View("ISO Viewer") {
                                 while (itra.hasNext()) {
                                     val b = itra.nextByte()
                                     s += if (Character.isLetterOrDigit(b.toInt())) {
-                                        b.toChar()
+                                        Character.forDigit(b.toInt(), 10)
                                     } else {
                                         '.'
                                     }

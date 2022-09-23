@@ -38,7 +38,7 @@ import java.util.*
 class BoxPane(internal var box: Box) : TitledPane() {
 
     init {
-        var beanInfo: BeanInfo? = null
+        var beanInfo: BeanInfo?
         try {
             beanInfo = Introspector.getBeanInfo(box.javaClass)
         } catch (e: IntrospectionException) {
@@ -81,7 +81,7 @@ class BoxPane(internal var box: Box) : TitledPane() {
                                 t.isEditable = false
                                 return t
                             } else {
-                                val lv = ListView(FXCollections.observableList((o as List<Any>)))
+                                val lv = ListView(FXCollections.observableList(o))
                                 lv.minHeight = 60.0
                                 val size = if (listSize > 0) o[0].toString().split("\r\n|\r|\n".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray().size else 1
 
