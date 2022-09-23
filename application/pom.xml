@@ -7,7 +7,7 @@
     <packaging>jar</packaging>
 
     <properties>
-        <kotlin.version>1.6.10</kotlin.version>
+        <kotlin.version>1.7.0</kotlin.version>
         <tornadofx.version>2.0.0-SNAPSHOT</tornadofx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
@@ -82,6 +82,18 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>

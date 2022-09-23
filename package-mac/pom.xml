@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mp4parser.isoviewer</groupId>
     <artifactId>package-mac</artifactId>
@@ -24,7 +25,7 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
             <version>17.0.1</version>
-            <classifier>mac</classifier>
+            <classifier>mac-aarch64</classifier>
         </dependency>
     </dependencies>
 
@@ -58,23 +59,30 @@
             <plugin>
                 <groupId>org.panteleyev</groupId>
                 <artifactId>jpackage-maven-plugin</artifactId>
-                <version>1.4.0</version>
+                <version>1.5.2</version>
                 <configuration>
+
                     <name>ISO Viewer</name>
                     <appVersion>1.0.0</appVersion>
                     <vendor>org.isoparser</vendor>
                     <destination>${project.build.directory}/dist</destination>
                     <mainJar>${project.build.directory}/jmods/isoviewer-2.0.2-SNAPSHOT.jar</mainJar>
-                    <runtimeImage>${project.build.directory}/jmods/isoviewer-2.0.2-SNAPSHOT.jar</runtimeImage>
-                    <input>${project.build.directory}/</input>
+                    <input>${project.build.directory}/jmods/</input>
                     <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
                     <linuxShortcut>true</linuxShortcut>
                     <linuxPackageName>ISO Viewer</linuxPackageName>
                     <linuxAppCategory>Utilities</linuxAppCategory>
                     <linuxMenuGroup>Utilities</linuxMenuGroup>
+                    <type>APP_IMAGE</type>
                     <icon>icon.png</icon>
                     <javaOptions>
-                        <option>-Dfile.encoding=UTF-8</option>
+                        <!-- <option>- -module-path Contents/app/</option>-->
+                        <option>--add-modules=javafx.controls</option>
+                        <option>--add-modules=javafx.base</option>
+<!--                        <option>- -add-modules=tornadofx</option>-->
+                        <option>--add-modules=kotlin.stdlib</option>
+                        <option>--add-modules=isoparser</option>
+                        <option>--add-modules=java.desktop</option>
                     </javaOptions>
                 </configuration>
             </plugin>
