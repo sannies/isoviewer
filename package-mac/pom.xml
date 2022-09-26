@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mp4parser.isoviewer</groupId>
     <artifactId>package-mac</artifactId>
-    <version>2.0.3</version>
+    <version>2.0.4-SNAPSHOT</version>
     <name>isoviewer-mac-package</name>
     <packaging>pom</packaging>
 
     <properties>
-        <isoviewerversion>2.0.3</isoviewerversion>
+        <isoviewerversion>2.0.4-SNAPSHOT</isoviewerversion>
         <kotlin.version>1.6.10</kotlin.version>
         <tornadofx.version>2.0.0-SNAPSHOT</tornadofx.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -70,7 +70,7 @@
                     <mainJar>isoviewer-${pom.version}.jar</mainJar>
                     <input>${project.build.directory}/jmods/</input>
                     <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
-                    <type>APP_IMAGE</type>
+                    <type>DMG</type>
                     <icon>src/icon.icns</icon>
                     <javaOptions>
                         <option>--module-path=$APPDIR</option>
