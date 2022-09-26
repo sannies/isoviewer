@@ -2,9 +2,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mp4parser.isoviewer</groupId>
-    <artifactId>package-mac</artifactId>
+    <artifactId>package-win</artifactId>
     <version>22-09-26</version>
-    <name>isoviewer-mac-package</name>
+    <name>isoviewer-win-package</name>
     <packaging>pom</packaging>
 
     <properties>
@@ -25,7 +25,7 @@
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-graphics</artifactId>
             <version>17.0.1</version>
-            <classifier>mac</classifier>
+            <classifier>win</classifier>
         </dependency>
     </dependencies>
 
@@ -73,7 +73,7 @@
                     <linuxPackageName>ISO Viewer</linuxPackageName>
                     <linuxAppCategory>Utilities</linuxAppCategory>
                     <linuxMenuGroup>Utilities</linuxMenuGroup>
-                    <type>DMG</type>
+                    <type>MSI</type>
                     <icon>src/icon.icns</icon>
                     <javaOptions>
                         <option>--module-path=$APPDIR</option>

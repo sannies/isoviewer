@@ -27,5 +27,6 @@
     <modules>
         <module>application</module>
         <module>package-mac</module>
+        <module>package-win</module>
     </modules>
 </project>
