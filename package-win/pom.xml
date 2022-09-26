@@ -64,7 +64,7 @@
                 <configuration>
 
                     <name>ISO Viewer</name>
-                    <appVersion>>${isoviewerversion}</appVersion>
+                    <appVersion>${isoviewerversion}</appVersion>
                     <vendor>org.isoparser</vendor>
                     <destination>${project.build.directory}/dist</destination>
                     <mainJar>isoviewer-${pom.version}.jar</mainJar>
