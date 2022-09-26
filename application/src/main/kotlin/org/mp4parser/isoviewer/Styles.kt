@@ -1,11 +1,6 @@
 package org.mp4parser.isoviewer
 
 import javafx.geometry.Pos
-import javafx.scene.paint.Color
-import javafx.scene.paint.CycleMethod
-import javafx.scene.paint.LinearGradient
-import javafx.scene.paint.Stop
-import javafx.scene.text.FontWeight
 import tornadofx.*
 
 class Styles : Stylesheet() {

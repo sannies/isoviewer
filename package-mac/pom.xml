@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.mp4parser.isoviewer</groupId>
+    <artifactId>package-mac</artifactId>
+    <version>2.0.2</version>
+    <name>isoviewer-mac-package</name>
+    <packaging>pom</packaging>
+
+    <properties>
+        <isoviewerversion>2.0.2</isoviewerversion>
+        <kotlin.version>1.6.10</kotlin.version>
+        <tornadofx.version>2.0.0-SNAPSHOT</tornadofx.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+    </properties>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.mp4parser.isoviewer</groupId>
+            <artifactId>isoviewer</artifactId>
+            <version>${pom.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx-graphics</artifactId>
+            <version>17.0.1</version>
+            <classifier>mac</classifier>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <outputDirectory>${project.build.directory}/jmods</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeScope>runtime</includeScope>
+                            <outputDirectory>${project.build.directory}/jmods</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.panteleyev</groupId>
+                <artifactId>jpackage-maven-plugin</artifactId>
+                <version>1.5.2</version>
+                <configuration>
+
+                    <name>ISO Viewer</name>
+                    <appVersion>${isoviewerversion}</appVersion>
+                    <vendor>org.isoparser</vendor>
+                    <destination>${project.build.directory}/dist</destination>
+                    <mainJar>isoviewer-${pom.version}.jar</mainJar>
+                    <input>${project.build.directory}/jmods/</input>
+                    <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
+                    <type>APP_IMAGE</type>
+                    <icon>src/icon.icns</icon>
+                    <javaOptions>
+                        <option>--module-path=$APPDIR</option>
+                        <option>--add-modules=javafx.controls</option>
+                        <option>--add-modules=javafx.base</option>
+<!--                        <option>- -add-modules=tornadofx</option>-->
+                        <option>--add-modules=kotlin.stdlib</option>
+                        <option>--add-modules=isoparser</option>
+                        <option>--add-modules=java.desktop</option>
+                    </javaOptions>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
