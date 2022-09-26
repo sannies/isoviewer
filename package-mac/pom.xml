@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mp4parser.isoviewer</groupId>
     <artifactId>package-mac</artifactId>
-    <version>1</version>
+    <version>22-09-26</version>
     <name>isoviewer-mac-package</name>
     <packaging>pom</packaging>
 
