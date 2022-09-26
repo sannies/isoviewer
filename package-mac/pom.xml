@@ -74,9 +74,9 @@
                     <linuxAppCategory>Utilities</linuxAppCategory>
                     <linuxMenuGroup>Utilities</linuxMenuGroup>
                     <type>APP_IMAGE</type>
-                    <icon>icon.png</icon>
+                    <icon>src/icon.icns</icon>
                     <javaOptions>
-                        <!-- <option>- -module-path Contents/app/</option>-->
+                        <option>--module-path=$APPDIR</option>
                         <option>--add-modules=javafx.controls</option>
                         <option>--add-modules=javafx.base</option>
 <!--                        <option>- -add-modules=tornadofx</option>-->
