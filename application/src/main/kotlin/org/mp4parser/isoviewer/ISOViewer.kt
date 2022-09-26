@@ -6,34 +6,14 @@ import javafx.scene.image.Image
 import javafx.stage.Stage
 import org.mp4parser.isoviewer.views.MainView
 import tornadofx.App
-import tornadofx.FX
 
-class ISOViewer: App(Image("icon.png"), MainView::class, Styles::class) {
+class ISOViewer : App(Image("icon.png"), MainView::class, Styles::class) {
+
     override fun start(stage: Stage) {
-
         stage.title = "ISO Viewer"
+        stage.setOnCloseRequest { Platform.exit() }
         super.start(stage)
-
-        trayicon(resources.stream("/icon.png")) {
-            setOnMouseClicked(fxThread = true) {
-                FX.primaryStage.show()
-                FX.primaryStage.toFront()
-            }
-
-            menu("MyApp") {
-                item("Show...") {
-                    setOnAction(fxThread = true) {
-                        FX.primaryStage.show()
-                        FX.primaryStage.toFront()
-                    }
-                }
-                item("Exit") {
-                    setOnAction(fxThread = true) {
-                        Platform.exit()
-                    }
-                }
-            }
-        }
+        stage.show()
     }
 }
 
