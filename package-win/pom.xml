@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.mp4parser.isoviewer</groupId>
     <artifactId>package-win</artifactId>
-    <version>22-09-26</version>
+    <version>2.0.2-SNAPSHOT</version>
     <name>isoviewer-win-package</name>
     <packaging>pom</packaging>
 
@@ -63,7 +63,7 @@
                 <configuration>
 
                     <name>ISO Viewer</name>
-                    <appVersion>1.0.0</appVersion>
+                    <appVersion>${pom.version}</appVersion>
                     <vendor>org.isoparser</vendor>
                     <destination>${project.build.directory}/dist</destination>
                     <mainJar>${project.build.directory}/jmods/isoviewer-2.0.2-SNAPSHOT.jar</mainJar>
