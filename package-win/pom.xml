@@ -66,7 +66,7 @@
                     <appVersion>${pom.version}</appVersion>
                     <vendor>org.isoparser</vendor>
                     <destination>${project.build.directory}/dist</destination>
-                    <mainJar>${project.build.directory}/jmods/isoviewer-2.0.2-SNAPSHOT.jar</mainJar>
+                    <mainJar>isoviewer-2.0.2-SNAPSHOT.jar</mainJar>
                     <input>${project.build.directory}/jmods/</input>
                     <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
                     <linuxShortcut>true</linuxShortcut>
