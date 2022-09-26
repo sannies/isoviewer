@@ -70,10 +70,7 @@
                     <mainJar>isoviewer-${pom.version}.jar</mainJar>
                     <input>${project.build.directory}/jmods/</input>
                     <mainClass>org.mp4parser.isoviewer.ISOViewer</mainClass>
-                    <linuxShortcut>true</linuxShortcut>
-                    <linuxPackageName>ISO Viewer</linuxPackageName>
-                    <linuxAppCategory>Utilities</linuxAppCategory>
-                    <linuxMenuGroup>Utilities</linuxMenuGroup>
+                    <winMenu>true</winMenu>
                     <type>MSI</type>
                     <icon>src/icon.icns</icon>
                     <javaOptions>
